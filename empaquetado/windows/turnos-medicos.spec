@@ -57,3 +57,5 @@ exe = EXE(
     upx=False,
 )
 coll = COLLECT(exe, a.binaries, a.datas, strip=False, upx=False, name="TurnosMedicos")
+# La licencia (GPL-3.0) va junto al ejecutable, a la vista de quien lo reciba.
+shutil.copy(os.path.join(SPECPATH, "..", "..", "LICENSE"), os.path.join(DISTPATH, "TurnosMedicos", "LICENSE.txt"))
