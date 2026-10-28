@@ -1,0 +1,65 @@
+/* Páginas sin sesión o sin contraseña definitiva: una columna centrada (también en el móvil). */
+.pagina {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: max(24px, env(safe-area-inset-top, 0px)) 16px 48px;
+  gap: 16px;
+}
+
+.marca {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 8vh;
+}
+
+.marca img {
+  width: 40px;
+  height: 40px;
+}
+
+.caja {
+  width: 100%;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.caja input {
+  width: 100%;
+  font-size: 16px; /* el iPhone no amplía la página al escribir */
+  padding: 8px 10px;
+}
+
+.caja .btn {
+  justify-content: center;
+  padding: 9px 12px;
+}
+
+.certificado {
+  width: 100%;
+  max-width: 400px;
+}
+
+.certificado summary {
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.certificado ol {
+  padding-left: 20px;
+  margin: 6px 0 10px;
+}
+
+.certificado li {
+  margin: 3px 0;
+}
+
+.huella {
+  font-family: var(--mono);
+  font-size: 11px;
+  word-break: break-all;
+}

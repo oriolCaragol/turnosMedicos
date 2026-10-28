@@ -1,0 +1,23 @@
+{
+  "calendario": "madrid",
+  "anio": 2027,
+  "completo": false,
+  "pendiente": "Faltan las 2 fiestas locales de Madrid, que publica el BOCM a final de año.",
+  "fuentes": [
+    "Decreto 82/2026, de 30 de septiembre, fiestas laborales 2027 en la Comunidad de Madrid (BOCM 01/10/2026)"
+  ],
+  "festivos": [
+    {"fecha": "2027-01-01", "descripcion": "Año Nuevo", "ambito": "NACIONAL"},
+    {"fecha": "2027-01-06", "descripcion": "Epifanía del Señor", "ambito": "NACIONAL"},
+    {"fecha": "2027-03-19", "descripcion": "San José", "ambito": "AUTONOMICO"},
+    {"fecha": "2027-03-25", "descripcion": "Jueves Santo", "ambito": "AUTONOMICO"},
+    {"fecha": "2027-03-26", "descripcion": "Viernes Santo", "ambito": "NACIONAL"},
+    {"fecha": "2027-05-01", "descripcion": "Fiesta del Trabajo", "ambito": "NACIONAL"},
+    {"fecha": "2027-08-16", "descripcion": "Traslado de la Asunción de la Virgen", "ambito": "AUTONOMICO"},
+    {"fecha": "2027-10-12", "descripcion": "Fiesta Nacional de España", "ambito": "NACIONAL"},
+    {"fecha": "2027-11-01", "descripcion": "Todos los Santos", "ambito": "NACIONAL"},
+    {"fecha": "2027-12-06", "descripcion": "Día de la Constitución Española", "ambito": "NACIONAL"},
+    {"fecha": "2027-12-08", "descripcion": "Inmaculada Concepción", "ambito": "NACIONAL"},
+    {"fecha": "2027-12-25", "descripcion": "Natividad del Señor", "ambito": "NACIONAL"}
+  ]
+}

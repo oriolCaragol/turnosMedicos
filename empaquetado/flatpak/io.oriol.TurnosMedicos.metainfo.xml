@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>io.oriol.TurnosMedicos</id>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>GPL-3.0-or-later</project_license>
+  <name>Turnos médicos</name>
+  <summary>Asigna los turnos de mañana y tarde del equipo</summary>
+  <developer id="io.oriol">
+    <name>Oriol</name>
+  </developer>
+  <description>
+    <p>
+      Genera el calendario mensual de turnos de un equipo de médicos, de lunes a
+      viernes, respetando las reglas de cada uno, sus ausencias, los festivos y la
+      cobertura necesaria cada día.
+    </p>
+    <ul>
+      <li>Reglas por médico: turnos habituales, fijos o no disponibles, y carga mensual</li>
+      <li>Turnos rotativos entre grupos de médicos</li>
+      <li>Urgencias y domicilios repartidos cada tarde</li>
+      <li>Cambios a mano arrastrando y soltando, con deshacer</li>
+      <li>Exportación a hoja de cálculo e impresión</li>
+    </ul>
+    <p>Los datos se guardan en el equipo, por separado para cada usuario.</p>
+  </description>
+  <launchable type="desktop-id">io.oriol.TurnosMedicos.desktop</launchable>
+  <categories>
+    <category>Office</category>
+  </categories>
+  <content_rating type="oars-1.1"/>
+  <requires>
+    <display_length compare="ge">960</display_length>
+  </requires>
+  <supports>
+    <control>pointing</control>
+    <control>keyboard</control>
+  </supports>
+  <releases>
+    <release version="2.16.0" date="2026-10-25">
+      <description>
+        <p>Nueva forma de decidir cuánto trabaja cada médico: todos los días laborables salvo ausencia, sin rangos de turnos al mes en las fichas. Se elige en Configuración.</p>
+      </description>
+    </release>
+    <release version="2.15.0" date="2026-10-25">
+      <description>
+        <p>Las urgencias se reparten siempre por igual (o según la presencia); si hay que forzar alguna desigualdad, va a los domicilios. Configurable en Configuración.</p>
+      </description>
+    </release>
+    <release version="2.14.0" date="2026-10-25">
+      <description>
+        <p>Los festivos precargados y el municipio por defecto pasan a ser los de Madrid. Los datos que ya tenían festivos de otro municipio lo conservan.</p>
+      </description>
+    </release>
+    <release version="2.13.0" date="2026-10-25">
+      <description>
+        <p>Al abrir la aplicación se elige dónde trabajar: en este equipo, con los datos y el motor incluidos, o contra un servidor de Turnos médicos de la red de casa, al que pueden entrar también los médicos desde el móvil.</p>
+        <p>Con un servidor: varios usuarios a la vez con cambios en vivo, cuentas para planificadores y médicos, solicitudes de los médicos (ausencias, disponibilidad y cambios de turno) y conexión cifrada con certificado propio.</p>
+      </description>
+    </release>
+    <release version="2.12.0" date="2026-10-17">
+      <description>
+        <p>Nueva opción en Configuración, desactivada por defecto: mostrar en cada turno del calendario los médicos asignados frente a los necesarios.</p>
+      </description>
+    </release>
+    <release version="2.11.0" date="2026-10-17">
+      <description>
+        <p>La interfaz nativa GNOME («Turnos médicos (nativa)») tiene ya todas las funciones: arrastrar y soltar, deshacer, ausencias, más reglas, turnos rotativos, cobertura, horarios e impresión.</p>
+      </description>
+    </release>
+    <release version="2.10.0" date="2026-10-17">
+      <description>
+        <p>Prototipo de interfaz nativa GNOME, como segunda entrada del menú («Turnos médicos (nativa)»), con los mismos datos.</p>
+      </description>
+    </release>
+    <release version="2.9.0" date="2026-10-16">
+      <description>
+        <p>Informe de urgencias y domicilios del mes, para imprimir y en hoja de cálculo: quién hace cada papel cada día y cuántas veces cada médico.</p>
+      </description>
+    </release>
+    <release version="2.8.0" date="2026-10-16">
+      <description>
+        <p>Nueva opción en Configuración, activada por defecto: urgencias y domicilios en proporción a la presencia de cada médico en el mes.</p>
+      </description>
+    </release>
+    <release version="2.7.0" date="2026-10-16">
+      <description>
+        <p>En Configuración: exportar e importar todos los datos, y buscar los festivos oficiales del municipio del centro (nacionales, autonómicos y locales) para añadir los que falten.</p>
+      </description>
+    </release>
+    <release version="2.6.1" date="2026-10-16">
+      <description>
+        <p>Urgencias y domicilios se reparten lo más igualado posible: entre dos médicos no hay más de una de diferencia, salvo que alguno no tenga tardes suficientes.</p>
+      </description>
+    </release>
+    <release version="2.6.0" date="2026-10-16">
+      <description>
+        <p>Primera versión como aplicación de escritorio GNOME.</p>
+      </description>
+    </release>
+  </releases>
+</component>

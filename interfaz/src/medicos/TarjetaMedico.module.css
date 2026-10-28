@@ -1,0 +1,65 @@
+.tarjeta {
+  background: var(--superficie);
+  border: 1px solid var(--borde);
+  border-radius: 8px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+}
+
+.tarjeta p {
+  margin: 0;
+}
+
+.inactiva {
+  opacity: 0.65;
+}
+
+.fila {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.nombre {
+  font-weight: 600;
+  flex: 1;
+  min-width: 0;
+  font-size: 15px;
+}
+
+.codigo {
+  width: 72px;
+  font-family: var(--mono);
+  text-transform: uppercase;
+}
+
+.pendiente {
+  color: var(--aviso);
+}
+
+.ausencias {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.ausencia {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+  font-size: 13px;
+}
+
+.ausencia input[type="date"] {
+  font-size: 12.5px;
+  padding: 3px 5px;
+}
+
+.ausencia select {
+  font-size: 12.5px;
+  padding: 3px 5px;
+}

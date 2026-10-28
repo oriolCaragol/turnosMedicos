@@ -1,0 +1,432 @@
+/* Calendario del mes: cuadrícula de lunes a viernes, cada día con mañana y tarde. */
+
+.franjaResumen {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+  align-items: baseline;
+}
+
+.cifra {
+  display: flex;
+  gap: 6px;
+  align-items: baseline;
+}
+
+.cifra b {
+  font-family: var(--mono);
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.estado {
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  align-self: center;
+}
+
+.estado_SIN_GENERAR {
+  background: var(--hundido);
+  color: var(--texto-suave);
+}
+
+.estado_BORRADOR {
+  background: var(--aviso-fondo);
+  color: var(--aviso);
+}
+
+.estado_PUBLICADO {
+  background: var(--ok-fondo);
+  color: var(--ok);
+}
+
+.leyenda {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  font-size: 12.5px;
+  color: var(--texto-suave);
+  margin-top: 10px;
+  justify-content: flex-end;
+}
+
+.punto {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  margin-right: 5px;
+}
+
+/* --- Rejilla ------------------------------------------------------------------------- */
+
+.desplazable {
+  overflow-x: auto;
+}
+
+.mesRejilla {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(150px, 1fr));
+  gap: 6px;
+  min-width: 780px;
+}
+
+.cabeceraDia {
+  padding: 0 4px;
+}
+
+.dia {
+  background: var(--superficie);
+  border: 1px solid var(--borde);
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  min-height: 150px;
+  scroll-margin-top: 140px;
+}
+
+.fuera {
+  background: transparent;
+  border-style: dashed;
+  opacity: 0.5;
+}
+
+.festivo {
+  background: var(--festivo);
+}
+
+.numeroDia {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 5px 8px 3px;
+  font-family: var(--mono);
+  font-size: 12.5px;
+  color: var(--texto-suave);
+}
+
+.numeroDia b {
+  color: var(--texto);
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.nombreFestivo {
+  padding: 4px 8px 8px;
+  font-size: 12.5px;
+  color: var(--texto-suave);
+}
+
+/* --- Franjas de mañana y tarde --------------------------------------------------------- */
+
+.franja {
+  border-top: 1px solid var(--borde);
+  border-left: 3px solid transparent;
+  padding: 5px 8px 6px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  cursor: pointer;
+}
+
+.franja:hover {
+  background: var(--hundido);
+}
+
+.franja:last-child {
+  border-radius: 0 0 5px 5px;
+}
+
+.critica {
+  border-left-color: var(--critico);
+  background: var(--critico-fondo);
+}
+
+.sobrante {
+  border-left-color: var(--aviso);
+}
+
+.cabeceraFranja {
+  border: 0;
+  background: none;
+  padding: 0;
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  font-size: 11.5px;
+  text-align: left;
+}
+
+.nombreTurno {
+  font-weight: 600;
+  letter-spacing: 0.05em;
+}
+
+.franjaManana .nombreTurno {
+  color: var(--manana);
+}
+
+.franjaTarde .nombreTurno {
+  color: var(--tarde);
+}
+
+.cuenta {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  color: var(--texto-suave);
+  margin-left: auto;
+}
+
+.critica .cuenta {
+  color: var(--critico);
+  font-weight: 500;
+}
+
+.bloqueo {
+  font-size: 10.5px;
+  color: var(--acento);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.fichas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+}
+
+.ficha {
+  font-size: 11.5px;
+  padding: 1px 6px;
+  border-radius: 4px;
+  background: var(--hundido);
+  white-space: nowrap;
+  user-select: none;
+}
+
+.arrastrable {
+  cursor: grab;
+  touch-action: none;
+}
+
+.fija {
+  box-shadow: inset 0 0 0 1px var(--fijo);
+}
+
+.media {
+  border: 1px dashed var(--texto-suave);
+  background: transparent;
+}
+
+.doble {
+  text-decoration: underline;
+  text-decoration-color: var(--aviso);
+  text-underline-offset: 2px;
+}
+
+.arrastrandose {
+  opacity: 0.35;
+}
+
+.flotante {
+  cursor: grabbing;
+  background: var(--superficie);
+  box-shadow: 0 4px 12px rgb(0 0 0 / 25%), inset 0 0 0 1px var(--acento);
+}
+
+/* Mientras se arrastra: dónde puede ir el médico. */
+.ido_si {
+  outline: 2px dashed var(--acento);
+  outline-offset: -3px;
+}
+
+.ido_AUSENTE,
+.ido_NO_DISPONIBLE {
+  background-image: repeating-linear-gradient(135deg, transparent 0 4px, var(--hundido) 4px 8px);
+}
+
+.ido_ya {
+  opacity: 0.55;
+}
+
+.encima {
+  outline: 2px solid var(--acento) !important;
+  outline-offset: -2px;
+}
+
+/* --- Panel lateral ---------------------------------------------------------------------- */
+
+.filaCajon {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 0;
+  border-bottom: 1px solid var(--borde);
+}
+
+.quien {
+  min-width: 0;
+}
+
+.quien b {
+  font-weight: 600;
+}
+
+.razones {
+  font-size: 12px;
+  color: var(--texto-suave);
+}
+
+.razonesMal {
+  color: var(--aviso);
+}
+
+.editarRango {
+  border-top: 1px solid var(--borde);
+  margin-top: 12px;
+  padding-top: 8px;
+}
+
+/* --- Selector de vista y vista en lista ------------------------------------------- */
+
+.barraVista {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.lista {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.filaLista {
+  display: grid;
+  grid-template-columns: 9.5rem minmax(0, 1fr) minmax(0, 1fr);
+  background: var(--superficie);
+  border: 1px solid var(--borde);
+  border-radius: 6px;
+  min-height: 52px;
+  scroll-margin-top: 140px;
+}
+
+.nuevaSemana {
+  margin-top: 12px;
+}
+
+.diaLista {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 8px 10px;
+  font-family: var(--mono);
+  font-size: 12.5px;
+  color: var(--texto-suave);
+}
+
+.diaLista b {
+  color: var(--texto);
+  font-weight: 500;
+  font-size: 15px;
+  min-width: 1.4em;
+  text-align: right;
+}
+
+.diaLista span {
+  font-family: var(--sans);
+  font-size: 13px;
+}
+
+/* En la lista, las franjas van una al lado de otra separadas por una línea vertical. */
+.filaLista > .franja {
+  border-top: 0;
+  box-shadow: inset 1px 0 0 var(--borde);
+  border-radius: 0;
+}
+
+.filaLista > .franja:last-child {
+  border-radius: 0 5px 5px 0;
+}
+
+.festivoLista {
+  grid-column: 2 / -1;
+  padding: 8px 10px;
+  color: var(--texto-suave);
+  font-size: 13px;
+  box-shadow: inset 1px 0 0 var(--borde);
+}
+
+@media (max-width: 700px) {
+  .filaLista {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .filaLista > .franja,
+  .festivoLista {
+    box-shadow: inset 0 1px 0 var(--borde);
+    grid-column: auto;
+  }
+}
+
+.filaLista.festivo {
+  background: var(--festivo);
+}
+
+.avisoGenerar {
+  margin-top: 12px;
+}
+
+/* --- Urgencias y domicilios -------------------------------------------------------------- */
+
+.rol {
+  display: inline-grid;
+  place-items: center;
+  width: 15px;
+  height: 15px;
+  margin-left: 4px;
+  border-radius: 3px;
+  vertical-align: -3px;
+  color: #fff;
+}
+
+.botonRol {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.rol_URGENCIAS {
+  background: var(--critico);
+}
+
+.rol_DOMICILIOS {
+  background: var(--tarde);
+}
+
+.controles {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+/* Solo consulta (médicos, impresión): no se puede pulsar ni arrastrar. */
+.soloLectura,
+.soloLectura .cabeceraFranja {
+  cursor: default;
+}
+
+/* El propio médico, en su vista. */
+.resaltada {
+  font-weight: 700;
+  box-shadow: 0 0 0 2px var(--acento);
+}

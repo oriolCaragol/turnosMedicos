@@ -1,0 +1,481 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>body{margin:0;font:14px/1.45 system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Doctor Shift Planner</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: one working column; sticky header with month + tabs; schedule = 5-column weekday calendar, each day split Morning / Afternoon */
+:root{
+  --bg:#f3f6f6; --surface:#ffffff; --sunk:#e9efef; --ink:#15232a; --muted:#56676f; --line:#d3dde0;
+  --accent:#0d6b70; --accent-ink:#ffffff; --morning:#b7801b; --afternoon:#4359a8;
+  --crit:#b8322a; --crit-bg:#fbe9e7; --warn:#b4610f; --warn-bg:#fdf1e3; --ok:#2c7a4f; --ok-bg:#e6f4ec;
+  --fixed:#0d6b70; --avail-bg:#e3f1f1; --hol:#eef0f6;
+  --sans:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0f1619; --surface:#162127; --sunk:#1c2a31; --ink:#e2ebee; --muted:#93a5ac; --line:#2b3c43;
+  --accent:#4fb0b5; --accent-ink:#0c1a1d; --morning:#e2b45a; --afternoon:#94a5ef;
+  --crit:#f27c70; --crit-bg:#3a1f1d; --warn:#f0a75c; --warn-bg:#382a1a; --ok:#70c995; --ok-bg:#1b3326;
+  --fixed:#4fb0b5; --avail-bg:#1d3436; --hol:#1d2430; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f1619; --surface:#162127; --sunk:#1c2a31; --ink:#e2ebee; --muted:#93a5ac; --line:#2b3c43;
+  --accent:#4fb0b5; --accent-ink:#0c1a1d; --morning:#e2b45a; --afternoon:#94a5ef;
+  --crit:#f27c70; --crit-bg:#3a1f1d; --warn:#f0a75c; --warn-bg:#382a1a; --ok:#70c995; --ok-bg:#1b3326;
+  --fixed:#4fb0b5; --avail-bg:#1d3436; --hol:#1d2430; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:14px;line-height:1.45}
+.wrap{max-width:1180px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 48px}
+header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--line)}
+.top .wrap{padding-block:14px 0;display:flex;flex-direction:column;gap:12px}
+.titlebar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px}
+h1{font-size:20px;font-weight:700;margin:0;letter-spacing:-.01em}
+h1 small{display:block;font-size:12px;font-weight:500;color:var(--muted);letter-spacing:0}
+.month{display:flex;align-items:center;gap:6px}
+.month output{font-family:var(--mono);font-size:15px;font-weight:500;min-width:9.5em;text-align:center}
+button{font:inherit;color:inherit;cursor:pointer}
+.btn{border:1px solid var(--line);background:var(--surface);border-radius:6px;padding:6px 12px;font-weight:500}
+.btn:hover{border-color:var(--accent)}
+.btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.btn.small{padding:3px 8px;font-size:12.5px}
+.btn.icon{width:34px;height:34px;padding:0;display:grid;place-items:center;font-size:16px}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+nav.tabs{display:flex;gap:2px;overflow-x:auto}
+nav.tabs button{border:0;background:none;padding:8px 14px;border-bottom:2px solid transparent;font-weight:500;color:var(--muted);white-space:nowrap}
+nav.tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent)}
+nav.tabs .count{font-family:var(--mono);font-size:11.5px;margin-left:4px;padding:1px 6px;border-radius:9px;background:var(--crit-bg);color:var(--crit)}
+main{padding-top:20px;display:flex;flex-direction:column;gap:20px}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:16px}
+h2{font-size:15px;margin:0 0 4px}
+.lead{color:var(--muted);margin:0 0 12px;max-width:70ch}
+.label{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.num{font-family:var(--mono);font-variant-numeric:tabular-nums}
+
+/* summary strip */
+.strip{display:flex;flex-wrap:wrap;gap:8px 20px;align-items:baseline}
+.strip .k{display:flex;gap:6px;align-items:baseline}
+.strip .k b{font-family:var(--mono);font-size:18px;font-weight:500}
+.legend{display:flex;flex-wrap:wrap;gap:12px;font-size:12.5px;color:var(--muted);margin-left:auto}
+.dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px;vertical-align:0}
+
+/* calendar */
+.cal-scroll{overflow-x:auto}
+.cal{display:grid;grid-template-columns:repeat(5,minmax(150px,1fr));gap:6px;min-width:780px}
+.cal .dow{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:600;padding:0 4px}
+.day{background:var(--surface);border:1px solid var(--line);border-radius:6px;display:flex;flex-direction:column;min-height:150px}
+.day.out{background:transparent;border-style:dashed;opacity:.5}
+.day.hol{background:var(--hol)}
+.day .dn{display:flex;justify-content:space-between;align-items:baseline;padding:5px 8px 3px;font-family:var(--mono);font-size:12.5px;color:var(--muted)}
+.day .dn b{color:var(--ink);font-weight:500;font-size:14px}
+.holname{padding:4px 8px 8px;font-size:12.5px;color:var(--muted)}
+.slot{border:0;border-top:1px solid var(--line);background:none;text-align:left;padding:5px 8px 6px;flex:1;display:flex;flex-direction:column;gap:4px;border-left:3px solid transparent}
+.slot:hover{background:var(--sunk)}
+.slot.crit{border-left-color:var(--crit);background:var(--crit-bg)}
+.slot.warn{border-left-color:var(--warn)}
+.slot .sh{display:flex;justify-content:space-between;align-items:center;font-size:11.5px}
+.slot .sh .nm{font-weight:600;letter-spacing:.05em}
+.slot.M .nm{color:var(--morning)} .slot.A .nm{color:var(--afternoon)}
+.slot .ct{font-family:var(--mono);font-size:11.5px;color:var(--muted)}
+.slot.crit .ct{color:var(--crit);font-weight:500}
+.lock{font-size:10.5px;color:var(--accent);font-weight:600;letter-spacing:.04em}
+.chips{display:flex;flex-wrap:wrap;gap:3px}
+.chip{font-size:11.5px;padding:1px 6px;border-radius:4px;background:var(--sunk);white-space:nowrap}
+.chip.fx{box-shadow:inset 0 0 0 1px var(--fixed)}
+.chip.half{border:1px dashed var(--muted);background:transparent}
+.chip.dbl{text-decoration:underline;text-decoration-color:var(--warn);text-underline-offset:2px}
+
+/* issues & tables */
+.two{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:20px}
+@media (max-width:860px){.two{grid-template-columns:minmax(0,1fr)}}
+ul.issues{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+ul.issues li{border-left:3px solid var(--crit);padding:4px 0 4px 10px}
+ul.issues li.warn{border-left-color:var(--warn)}
+ul.issues li .t{font-weight:600}
+ul.issues li .r{color:var(--muted);font-size:13px}
+.empty{color:var(--ok);font-weight:500}
+.tbl-scroll{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:13px}
+th,td{text-align:left;padding:6px 8px;border-bottom:1px solid var(--line);white-space:nowrap}
+th{font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);font-weight:600}
+td.n,th.n{text-align:right;font-family:var(--mono);font-variant-numeric:tabular-nums}
+td.bad{color:var(--crit);font-weight:500}
+
+/* doctors */
+.docs{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:12px}
+.doc{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:12px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.doc .row{display:flex;flex-wrap:wrap;gap:8px;align-items:end}
+.field{display:flex;flex-direction:column;gap:3px}
+.field span{font-size:11px;color:var(--muted);font-weight:600;letter-spacing:.04em;text-transform:uppercase}
+input,select{font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:5px;padding:5px 7px}
+input[type=number]{width:62px;font-family:var(--mono)}
+input.name{font-weight:600;flex:1;min-width:0;font-size:15px}
+.grid{display:grid;grid-template-columns:auto repeat(5,1fr);gap:3px;align-items:center}
+.grid .h{font-size:11px;color:var(--muted);text-align:center;font-weight:600}
+.grid .rh{font-size:11.5px;font-weight:600;padding-right:4px}
+.grid .rh.M{color:var(--morning)} .grid .rh.A{color:var(--afternoon)}
+.cell{border:1px solid var(--line);border-radius:4px;padding:5px 0;font-size:11.5px;font-weight:600;background:var(--surface);color:var(--muted)}
+.cell.F{background:var(--fixed);border-color:var(--fixed);color:var(--accent-ink)}
+.cell.Y{background:var(--avail-bg);border-color:var(--accent);color:var(--accent)}
+.cell.N{background:repeating-linear-gradient(135deg,transparent 0 4px,var(--sunk) 4px 8px);color:var(--muted);font-weight:400}
+.abs{display:flex;flex-direction:column;gap:5px}
+.abs .a{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:13px}
+.abs input[type=date]{font-family:var(--mono);font-size:12.5px;padding:3px 5px}
+.abs input[type=text]{width:110px;font-size:12.5px;padding:3px 5px}
+.x{border:0;background:none;color:var(--muted);font-size:16px;line-height:1;padding:2px 6px}
+.x:hover{color:var(--crit)}
+
+/* coverage */
+.cov td input{width:56px}
+.cov td.dayc{font-weight:600}
+
+/* drawer */
+.scrim{position:fixed;inset:0;background:rgba(10,20,24,.35);z-index:20}
+.drawer{position:fixed;z-index:21;right:0;top:0;bottom:0;width:min(420px,100%);background:var(--surface);border-left:1px solid var(--line);display:flex;flex-direction:column;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);padding-right:env(safe-area-inset-right,0px)}
+.drawer .hd{padding:16px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:10px;align-items:start}
+.drawer .bd{padding:8px 16px 16px;overflow-y:auto;flex:1}
+.drawer .ft{padding:12px 16px;border-top:1px solid var(--line);display:flex;gap:8px;flex-wrap:wrap}
+.drow{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--line)}
+.drow .who{min-width:0}
+.drow .who b{font-weight:600}
+.drow .who .r{font-size:12px;color:var(--muted)}
+.drow .who .r.bad{color:var(--warn)}
+.seg{display:flex;border:1px solid var(--line);border-radius:6px;overflow:hidden;flex-shrink:0}
+.seg button{border:0;background:var(--surface);padding:4px 10px;font-family:var(--mono);font-size:12.5px;border-left:1px solid var(--line)}
+.seg button:first-child{border-left:0}
+.seg button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(20px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--bg);padding:8px 14px;border-radius:6px;z-index:30;font-size:13px}
+textarea.csv{width:100%;height:160px;font-family:var(--mono);font-size:12px;background:var(--sunk);color:var(--ink);border:1px solid var(--line);border-radius:6px;padding:8px}
+.note{font-size:12.5px;color:var(--muted)}
+@media (prefers-reduced-motion:no-preference){.drawer{animation:slide .18s ease-out}@keyframes slide{from{transform:translateX(24px);opacity:.6}}}
+</style>
+
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <div class="titlebar">
+      <h1>Doctor Shift Planner<small>Prototype · weekday Morning / Afternoon · Comunidad de Madrid + Madrid holidays</small></h1>
+      <div class="month">
+        <button class="btn icon" id="prevM" aria-label="Previous month">‹</button>
+        <output id="monthLbl"></output>
+        <button class="btn icon" id="nextM" aria-label="Next month">›</button>
+      </div>
+    </div>
+    <nav class="tabs" role="tablist">
+      <button role="tab" data-tab="schedule">Schedule<span class="count" id="issueCount" hidden></span></button>
+      <button role="tab" data-tab="doctors">Doctors &amp; rules</button>
+      <button role="tab" data-tab="coverage">Coverage</button>
+      <button role="tab" data-tab="holidays">Holidays</button>
+    </nav>
+  </div>
+</header>
+
+<div class="wrap"><main id="main"></main></div>
+<div id="overlay"></div>
+
+<script>
+(function(){
+const SH=['M','A'], SHN={M:'Morning',A:'Afternoon'}, DOW=['Mon','Tue','Wed','Thu','Fri'];
+const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
+const KEY='doctor-shift-planner-v1';
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmtV=v=>v===0.5?'½':(v%1===0.5?Math.floor(v)+'½':String(v));
+
+/* ---------- sample data ---------- */
+function g(m,a){return m.split('').map((c,i)=>[c,a[i]]);}   // 5-char strings: F fixed, Y available, N unavailable
+function sample(){
+  return {
+    month:'2026-11',
+    doctors:[
+      {id:'d1',name:'Dra. Ortega',pref:'M',dailyMax:1,wkMin:3,wkMax:5,grid:g('FYFYF','NNNNN'),absences:[]},
+      {id:'d2',name:'Dr. Molina',pref:'mix',dailyMax:2,wkMin:3,wkMax:5,grid:g('YFYYY','YYYFY'),absences:[{from:'2026-11-27',to:'2026-11-27',reason:'Personal day'}]},
+      {id:'d3',name:'Dra. Ruiz',pref:'A',dailyMax:1.5,wkMin:2,wkMax:4,grid:g('NNNNY','FYFYY'),absences:[{from:'2026-11-23',to:'2026-11-27',reason:'Congress'}]},
+      {id:'d4',name:'Dr. Navarro',pref:'M',dailyMax:1.5,wkMin:3,wkMax:5,grid:g('YYYFY','NYNYN'),absences:[{from:'2026-11-16',to:'2026-11-20',reason:'Holiday'}]},
+      {id:'d5',name:'Dra. Campos',pref:'M',dailyMax:1,wkMin:3,wkMax:3,grid:g('FFFNN','NNNNN'),absences:[]},
+      {id:'d6',name:'Dr. Serrano',pref:'A',dailyMax:2,wkMin:2,wkMax:5,grid:g('YNYNN','YFYYF'),absences:[{from:'2026-11-26',to:'2026-11-27',reason:'Holiday'}]},
+      {id:'d7',name:'Dra. Vidal',pref:'mix',dailyMax:1.5,wkMin:2,wkMax:5,grid:g('YYYYY','YYYYY'),absences:[{from:'2026-11-25',to:'2026-11-27',reason:'Training'}]},
+      {id:'d8',name:'Dr. Fuentes',pref:'M',dailyMax:1,wkMin:3,wkMax:4,grid:g('YYFYF','YNNNN'),absences:[]}
+    ],
+    coverage:[0,1,2,3,4].map(i=>({M:{min:3,target:4,max:5},A:{min:2,target:2,max:3}})).map((c,i)=>i===4?{M:c.M,A:{min:1,target:2,max:3}}:c),
+    holidays:[
+      ['2026-01-01','Año Nuevo','Regional'],['2026-01-06','Epifanía del Señor','Regional'],['2026-04-02','Jueves Santo','Regional'],
+      ['2026-04-03','Viernes Santo','Regional'],['2026-05-01','Fiesta del Trabajo','Regional'],['2026-05-02','Fiesta de la Comunidad de Madrid','Regional'],
+      ['2026-05-15','San Isidro (Madrid local)','Local'],['2026-08-15','Asunción de la Virgen','Regional'],
+      ['2026-10-12','Fiesta Nacional de España','Regional'],['2026-11-02','Todos los Santos (moved)','Regional'],['2026-12-07','Día de la Constitución (moved)','Regional'],
+      ['2026-12-08','Inmaculada Concepción','Regional'],['2026-12-25','Natividad del Señor','Regional'],
+      ['2027-01-01','Año Nuevo','Regional'],['2027-01-06','Epifanía del Señor','Regional'],['2027-03-19','San José','Regional'],
+      ['2027-03-25','Jueves Santo','Regional'],['2027-03-26','Viernes Santo','Regional'],['2027-05-01','Fiesta del Trabajo','Regional'],
+      ['2027-08-16','Asunción de la Virgen (moved)','Regional'],['2027-10-12','Fiesta Nacional de España','Regional'],['2027-11-01','Todos los Santos','Regional'],
+      ['2027-12-06','Día de la Constitución','Regional'],['2027-12-08','Inmaculada Concepción','Regional'],['2027-12-25','Natividad del Señor','Regional']
+    ].map(([date,name,scope])=>({date,name,scope})),
+    manual:{}
+  };
+}
+
+/* ---------- state ---------- */
+let S, tab='schedule', openSlot=null, csvOpen=false;
+try{const raw=localStorage.getItem(KEY); S=raw?JSON.parse(raw):null;}catch(e){S=null}
+if(!S||!S.doctors) S=sample();
+try{const t=localStorage.getItem(KEY+'-tab'); if(t) tab=t;}catch(e){}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
+
+/* ---------- dates ---------- */
+function monthDays(ym){const [y,m]=ym.split('-').map(Number);const n=new Date(Date.UTC(y,m,0)).getUTCDate();const out=[];
+  for(let d=1;d<=n;d++){const dt=new Date(Date.UTC(y,m-1,d));out.push({iso:dt.toISOString().slice(0,10),wd:dt.getUTCDay(),day:d});}return out;}
+function mondayOf(iso){const dt=new Date(iso+'T00:00:00Z');dt.setUTCDate(dt.getUTCDate()-((dt.getUTCDay()+6)%7));return dt.toISOString().slice(0,10);}
+function shiftMonth(ym,k){let [y,m]=ym.split('-').map(Number);m+=k;while(m>12){m-=12;y++}while(m<1){m+=12;y--}return y+'-'+String(m).padStart(2,'0');}
+function dayLabel(iso){const dt=new Date(iso+'T00:00:00Z');return DOW[(dt.getUTCDay()+6)%7]+' '+dt.getUTCDate()+' '+MONTHS[dt.getUTCMonth()].slice(0,3);}
+
+/* ---------- engine ---------- */
+const REASON={unavailable:'unavailable',absent:'absent',already:'already in this slot',nohalf:'not working the other shift',extra:'already working that day',daily:'at daily limit',weekly:'at weekly maximum',max:'slot full'};
+function generate(S){
+  const hol=new Map(S.holidays.map(h=>[h.date,h.name]));
+  const days=monthDays(S.month).filter(d=>d.wd>=1&&d.wd<=5&&!hol.has(d.iso));
+  const res={};days.forEach(d=>res[d.iso]={M:{},A:{}});
+  const docs=S.doctors, wk={}, dl={}, tot={}, fri={}, wdCount={}, fixedSet=new Set(), issues=[];
+  days.forEach(d=>{const w=mondayOf(d.iso);wdCount[w]=(wdCount[w]||0)+1;});
+  const cnt=(iso,s)=>Object.values(res[iso][s]).reduce((a,b)=>a+b,0);
+  const cov=(d,s)=>S.coverage[d.wd-1][s];
+  const absent=(doc,iso)=>doc.absences.some(a=>a.from&&a.to&&a.from<=iso&&iso<=a.to);
+  const cell=(doc,d,s)=>doc.grid[d.wd-1][s==='M'?0:1];
+  const isLocked=(d,s)=>!!S.manual[d.iso+'|'+s];
+  const other=s=>s==='M'?'A':'M';
+  function add(doc,d,s,v){res[d.iso][s][doc.id]=(res[d.iso][s][doc.id]||0)+v;const w=mondayOf(d.iso);
+    wk[doc.id+'|'+w]=(wk[doc.id+'|'+w]||0)+v;dl[doc.id+'|'+d.iso]=(dl[doc.id+'|'+d.iso]||0)+v;tot[doc.id]=(tot[doc.id]||0)+v;
+    if(d.wd===5&&s==='A')fri[doc.id]=(fri[doc.id]||0)+v;}
+  function whyNot(doc,d,s,v,extra){
+    if(cell(doc,d,s)==='N')return'unavailable';
+    if(absent(doc,d.iso))return'absent';
+    if(res[d.iso][s][doc.id])return'already';
+    const o=res[d.iso][other(s)][doc.id]||0;
+    if(v===0.5&&o!==1)return'nohalf';
+    if(o>0&&!extra)return'extra';
+    if((dl[doc.id+'|'+d.iso]||0)+v>doc.dailyMax)return'daily';
+    if((wk[doc.id+'|'+mondayOf(d.iso)]||0)+v>doc.wkMax)return'weekly';
+    if(cnt(d.iso,s)+v>cov(d,s).max)return'max';
+    return null;}
+  function score(doc,d,s,v){const w=mondayOf(d.iso),wl=wk[doc.id+'|'+w]||0,pmin=doc.wkMin*wdCount[w]/5;
+    let sc=(wl-pmin)*4+(tot[doc.id]||0)/Math.max(doc.wkMax,1);
+    if(res[d.iso][other(s)][doc.id])sc+=v===1?40:25;
+    if(doc.pref!=='mix'&&doc.pref!==s)sc+=3;
+    if(d.wd===5&&s==='A')sc+=(fri[doc.id]||0)*3;
+    return sc;}
+  // 1. locked slots (manual edits)
+  for(const d of days)for(const s of SH){const m=S.manual[d.iso+'|'+s];if(!m)continue;
+    for(const [id,v] of Object.entries(m)){const doc=docs.find(x=>x.id===id);if(doc&&v>0)add(doc,d,s,v);}}
+  // 2. fixed cells
+  for(const d of days)for(const s of SH){if(isLocked(d,s))continue;
+    for(const doc of docs){if(cell(doc,d,s)!=='F'||absent(doc,d.iso))continue;
+      const daily=(dl[doc.id+'|'+d.iso]||0)+1, week=(wk[doc.id+'|'+mondayOf(d.iso)]||0)+1;
+      if(daily>doc.dailyMax){issues.push({lvl:'warn',t:`${doc.name}: fixed ${SHN[s]} on ${dayLabel(d.iso)} skipped`,r:`It would exceed the daily limit of ${fmtV(doc.dailyMax)} shifts.`,slot:d.iso+'|'+s});continue;}
+      if(week>doc.wkMax){issues.push({lvl:'warn',t:`${doc.name}: fixed ${SHN[s]} on ${dayLabel(d.iso)} skipped`,r:`The week already has ${fmtV(week-1)} shifts (maximum ${doc.wkMax}).`,slot:d.iso+'|'+s});continue;}
+      add(doc,d,s,1);fixedSet.add(doc.id+'|'+d.iso+'|'+s);}
+    if(cnt(d.iso,s)>cov(d,s).max)issues.push({lvl:'warn',t:`${dayLabel(d.iso)} ${SHN[s]}: fixed shifts exceed the maximum`,r:`${cnt(d.iso,s)} doctors fixed, maximum is ${cov(d,s).max}.`,slot:d.iso+'|'+s});}
+  // 3. fill passes
+  function fill(level,extra){let progress=true,guard=0;
+    while(progress&&guard++<300){progress=false;const slots=[];
+      for(const d of days)for(const s of SH){if(isLocked(d,s))continue;if(cov(d,s)[level]-cnt(d.iso,s)>0)
+        slots.push({d,s,c:docs.filter(doc=>!whyNot(doc,d,s,1,extra)).length});}
+      slots.sort((a,b)=>a.c-b.c||a.d.iso.localeCompare(b.d.iso)||a.s.localeCompare(b.s));
+      for(const {d,s} of slots){if(cov(d,s)[level]-cnt(d.iso,s)<=0)continue;
+        let best=null,bs=Infinity,bv=1;
+        for(const doc of docs)if(!whyNot(doc,d,s,1,extra)){const sc=score(doc,d,s,1);if(sc<bs){bs=sc;best=doc;bv=1;}}
+        if(!best&&extra)for(const doc of docs)if(!whyNot(doc,d,s,0.5,true)){const sc=score(doc,d,s,0.5);if(sc<bs){bs=sc;best=doc;bv=0.5;}}
+        if(best){add(best,d,s,bv);progress=true;}}}}
+  fill('min',false);fill('min',true);fill('target',false);
+  // 4. weekly minimum top-up (prorated for holidays)
+  const weeks=[...new Set(days.map(d=>mondayOf(d.iso)))];
+  for(const doc of docs)for(const w of weeks){
+    const wdays=days.filter(d=>mondayOf(d.iso)===w&&!absent(doc,d.iso));
+    const pmin=Math.floor(doc.wkMin*wdays.length/5);
+    let guard=0;
+    while((wk[doc.id+'|'+w]||0)<pmin&&guard++<10){let best=null,bs=Infinity;
+      for(const d of wdays)for(const s of SH){if(isLocked(d,s)||whyNot(doc,d,s,1,false))continue;
+        const sc=cnt(d.iso,s)-cov(d,s).target;if(sc<bs){bs=sc;best={d,s};}}
+      if(!best)break;add(doc,best.d,best.s,1);}
+    const got=wk[doc.id+'|'+w]||0;
+    if(got<pmin)issues.push({lvl:'warn',t:`${doc.name}: ${fmtV(got)} of ${pmin} minimum shifts, week of ${dayLabel(w)}`,r:'No open slot matches this doctor’s available cells without breaking another rule.'});}
+  // 5. uncovered slots
+  for(const d of days)for(const s of SH){const have=cnt(d.iso,s),need=cov(d,s).min;if(have>=need)continue;
+    const why={};for(const doc of docs){const r=whyNot(doc,d,s,1,true);if(r&&r!=='already')why[r]=(why[r]||0)+1;}
+    const parts=Object.entries(why).sort((a,b)=>b[1]-a[1]).map(([k,n])=>`${n} ${REASON[k]}`);
+    issues.unshift({lvl:'crit',t:`${dayLabel(d.iso)} ${SHN[s]}: ${fmtV(have)} of ${need} needed`,r:'Other doctors: '+(parts.join(', ')||'none left')+'.',slot:d.iso+'|'+s});}
+  return {days,res,issues,fixedSet,hol,wdCount,
+    stat:docs.map(doc=>{let M=0,A=0,half=0,dbl=0,fr=0;
+      for(const d of days){const m=res[d.iso].M[doc.id]||0,a=res[d.iso].A[doc.id]||0;M+=m;A+=a;
+        if(m===0.5||a===0.5)half++;if(m===1&&a===1)dbl++;if(d.wd===5)fr+=a;}
+      const wkBelow=weeks.filter(w=>{const wd=days.filter(d=>mondayOf(d.iso)===w&&!absent(doc,d.iso)).length;return (wk[doc.id+'|'+w]||0)<Math.floor(doc.wkMin*wd/5);}).length;
+      return {doc,M,A,total:M+A,half,dbl,fr,wkBelow};}),
+    cnt,cov,whyNot,absent,cell};
+}
+
+/* ---------- render ---------- */
+const main=document.getElementById('main'), overlay=document.getElementById('overlay');
+let R;
+function render(){
+  R=generate(S);
+  const [y,m]=S.month.split('-').map(Number);
+  document.getElementById('monthLbl').textContent=MONTHS[m-1]+' '+y;
+  document.querySelectorAll('nav.tabs button').forEach(b=>b.setAttribute('aria-selected',b.dataset.tab===tab?'true':'false'));
+  const crit=R.issues.filter(i=>i.lvl==='crit').length, ic=document.getElementById('issueCount');
+  ic.hidden=!crit; ic.textContent=crit;
+  main.innerHTML=({schedule:vSchedule,doctors:vDoctors,coverage:vCoverage,holidays:vHolidays})[tab]();
+  renderDrawer();
+}
+
+function slotState(d,s){const have=R.cnt(d.iso,s),c=R.cov(d,s);return have<c.min?'crit':have<c.target?'warn':'ok';}
+function vSchedule(){
+  const all=monthDays(S.month), wd=all.filter(d=>d.wd>=1&&d.wd<=5);
+  const slots=R.days.length*2, crit=R.issues.filter(i=>i.lvl==='crit').length;
+  const under=R.days.reduce((n,d)=>n+SH.filter(s=>slotState(d,s)==='warn').length,0);
+  const locked=Object.keys(S.manual).filter(k=>k.startsWith(S.month)).length;
+  const hols=wd.filter(d=>R.hol.has(d.iso)).length;
+  let h=`<section class="panel"><div class="strip">
+    <div class="k"><b>${R.days.length}</b><span class="label">working days</span></div>
+    <div class="k"><b>${slots}</b><span class="label">slots</span></div>
+    <div class="k"><b style="color:var(--${crit?'crit':'ok'})">${crit}</b><span class="label">below minimum</span></div>
+    <div class="k"><b>${under}</b><span class="label">below target</span></div>
+    <div class="k"><b>${hols}</b><span class="label">weekday holidays</span></div>
+    <div class="k"><b>${locked}</b><span class="label">locked slots</span></div>
+    <div class="legend"><span><span class="dot" style="background:var(--crit)"></span>below minimum</span><span><span class="dot" style="background:var(--warn)"></span>below target</span><span><span class="chip fx">Name</span> fixed</span><span><span class="chip half">Name ½</span> half shift</span><span><span class="chip dbl">Name</span> double day</span></div>
+  </div></section>`;
+  // calendar
+  h+=`<section><div class="cal-scroll"><div class="cal">${DOW.map(x=>`<div class="dow">${x}</div>`).join('')}`;
+  const first=wd[0]; for(let i=1;i<first.wd;i++)h+=`<div class="day out"></div>`;
+  for(const d of wd){
+    if(R.hol.has(d.iso)){h+=`<div class="day hol"><div class="dn"><b>${d.day}</b><span>Holiday</span></div><div class="holname">${esc(R.hol.get(d.iso))}</div></div>`;continue;}
+    h+=`<div class="day"><div class="dn"><b>${d.day}</b></div>`;
+    for(const s of SH){const st=slotState(d,s),c=R.cov(d,s),have=R.cnt(d.iso,s),key=d.iso+'|'+s,lk=!!S.manual[key];
+      const chips=S.doctors.filter(doc=>R.res[d.iso][s][doc.id]).map(doc=>{const v=R.res[d.iso][s][doc.id];
+        const o=R.res[d.iso][s==='M'?'A':'M'][doc.id]||0;
+        const cls=['chip',v===0.5?'half':'',R.fixedSet.has(doc.id+'|'+d.iso+'|'+s)?'fx':'',(v===1&&o===1)?'dbl':''].join(' ');
+        return `<span class="${cls}">${esc(short(doc.name))}${v===0.5?' ½':''}</span>`;}).join('');
+      h+=`<button class="slot ${s} ${st==='ok'?'':st}" data-slot="${key}" aria-label="${SHN[s]} ${dayLabel(d.iso)}, ${fmtV(have)} doctors"><span class="sh"><span class="nm">${s==='M'?'MORNING':'AFTERNOON'}</span>${lk?'<span class="lock">LOCKED</span>':''}<span class="ct">${fmtV(have)}/${c.min}–${c.target}</span></span><span class="chips">${chips||'<span class="note">nobody</span>'}</span></button>`;}
+    h+=`</div>`;}
+  h+=`</div></div><p class="note">Counts read “assigned / minimum–target”. Click a shift to change who works it; your change locks that shift so regeneration keeps it.</p></section>`;
+  // issues + load
+  const iss=R.issues.length?`<ul class="issues">${R.issues.map(i=>`<li class="${i.lvl}"><div class="t">${esc(i.t)}</div><div class="r">${esc(i.r)}</div></li>`).join('')}</ul>`:`<p class="empty">Every shift meets its minimum and every doctor meets their weekly minimum.</p>`;
+  const rows=R.stat.map(x=>`<tr><td>${esc(x.doc.name)}</td><td class="n">${fmtV(x.total)}</td><td class="n">${fmtV(x.M)}</td><td class="n">${fmtV(x.A)}</td><td class="n">${x.half}</td><td class="n">${x.dbl}</td><td class="n">${fmtV(x.fr)}</td><td class="n ${x.wkBelow?'bad':''}">${x.wkBelow}</td></tr>`).join('');
+  h+=`<div class="two"><section class="panel"><h2>Problems to resolve</h2><p class="lead">Each line says what rule blocks the gap, so you can decide whether the rule or the plan needs to change.</p>${iss}</section>
+    <section class="panel"><h2>Load per doctor</h2><p class="lead">Shifts this month. ½ counts as half a shift.</p><div class="tbl-scroll"><table><thead><tr><th>Doctor</th><th class="n">Total</th><th class="n">M</th><th class="n">A</th><th class="n">1.5 days</th><th class="n">Double days</th><th class="n">Fri A</th><th class="n">Weeks under min</th></tr></thead><tbody>${rows}</tbody></table></div></section></div>`;
+  h+=`<section class="panel"><div class="titlebar"><div><h2>Export</h2><p class="lead" style="margin:0">One row per doctor per shift, ready to paste into a spreadsheet.</p></div><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn" id="copyCsv">Copy as CSV</button><button class="btn" id="toggleCsv">${csvOpen?'Hide':'Show'} CSV</button><button class="btn" id="unlockAll">Unlock all shifts this month</button></div></div>${csvOpen?`<textarea class="csv" id="csvText" readonly>${esc(csv())}</textarea>`:''}</section>`;
+  return h;
+}
+function short(n){return n.replace(/^Dra?\.\s*/,'');}
+function csv(){const L=['date,weekday,shift,doctor,amount'];
+  for(const d of R.days)for(const s of SH)for(const doc of S.doctors){const v=R.res[d.iso][s][doc.id];if(v)L.push(`${d.iso},${DOW[d.wd-1]},${SHN[s]},"${doc.name.replace(/"/g,'""')}",${v}`);}
+  return L.join('\n');}
+
+function vDoctors(){
+  const cards=S.doctors.map((doc,i)=>{
+    const gridH=`<div class="grid"><span></span>${DOW.map(x=>`<span class="h">${x}</span>`).join('')}${SH.map((s,si)=>`<span class="rh ${s}">${s==='M'?'Morn.':'Aft.'}</span>${doc.grid.map((c,di)=>`<button class="cell ${c[si]}" data-cell="${doc.id}|${di}|${si}" aria-label="${DOW[di]} ${SHN[s]}: ${({F:'fixed',Y:'available',N:'unavailable'})[c[si]]}">${({F:'Fixed',Y:'Avail.',N:'—'})[c[si]]}</button>`).join('')}`).join('')}</div>`;
+    const abs=doc.absences.map((a,ai)=>`<div class="a"><input type="date" id="af-${doc.id}-${ai}" data-abs="${doc.id}|${ai}|from" value="${esc(a.from)}" aria-label="Absence start"><span>to</span><input type="date" id="at-${doc.id}-${ai}" data-abs="${doc.id}|${ai}|to" value="${esc(a.to)}" aria-label="Absence end"><input type="text" id="ar-${doc.id}-${ai}" data-abs="${doc.id}|${ai}|reason" value="${esc(a.reason||'')}" placeholder="Reason" aria-label="Reason"><button class="x" data-delabs="${doc.id}|${ai}" aria-label="Remove absence">×</button></div>`).join('');
+    return `<article class="doc"><div class="row"><input class="name" id="nm-${doc.id}" data-f="${doc.id}|name" value="${esc(doc.name)}" aria-label="Doctor name"><button class="x" data-del="${doc.id}" aria-label="Remove ${esc(doc.name)}" title="Remove doctor">×</button></div>
+      ${gridH}
+      <div class="row">
+        <label class="field"><span>Per day max</span><select id="dm-${doc.id}" data-f="${doc.id}|dailyMax">${[1,1.5,2].map(v=>`<option value="${v}" ${doc.dailyMax==v?'selected':''}>${v===1?'1 shift':v===1.5?'1½ shifts':'2 shifts'}</option>`).join('')}</select></label>
+        <label class="field"><span>Week min</span><input type="number" min="0" max="10" step="0.5" id="wmin-${doc.id}" data-f="${doc.id}|wkMin" value="${doc.wkMin}"></label>
+        <label class="field"><span>Week max</span><input type="number" min="0" max="10" step="0.5" id="wmax-${doc.id}" data-f="${doc.id}|wkMax" value="${doc.wkMax}"></label>
+        <label class="field"><span>Prefers</span><select id="pf-${doc.id}" data-f="${doc.id}|pref"><option value="M" ${doc.pref==='M'?'selected':''}>Mornings</option><option value="A" ${doc.pref==='A'?'selected':''}>Afternoons</option><option value="mix" ${doc.pref==='mix'?'selected':''}>No preference</option></select></label>
+      </div>
+      <div class="abs"><span class="label">Absences</span>${abs||'<span class="note">None</span>'}<div><button class="btn small" data-addabs="${doc.id}">Add absence</button></div></div>
+    </article>`;}).join('');
+  return `<section><h2>Doctors and their weekly rules</h2><p class="lead">Click a cell to cycle it: <b>Fixed</b> (always works it), <b>Avail.</b> (can be scheduled), <b>—</b> (never). Absences override fixed cells. Week min is reduced in weeks with holidays or absences.</p>
+    <div class="docs">${cards}</div>
+    <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap"><button class="btn primary" id="addDoc">Add doctor</button><button class="btn" id="resetAll">Reset to example data</button></div>
+    ${pendingReset?`<div class="panel" style="margin-top:12px;display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span>Replace all doctors, coverage, holidays and locked shifts with the example data?</span><button class="btn primary" id="confirmReset">Reset</button><button class="btn" id="cancelReset">Cancel</button></div>`:''}</section>`;
+}
+let pendingReset=false;
+
+function vCoverage(){
+  const rows=DOW.map((d,i)=>`<tr><td class="dayc">${d}</td>${SH.map(s=>['min','target','max'].map(k=>`<td><input type="number" min="0" max="20" step="0.5" id="cv-${i}-${s}-${k}" data-cov="${i}|${s}|${k}" value="${S.coverage[i][s][k]}" aria-label="${d} ${SHN[s]} ${k}"></td>`).join('')).join('')}</tr>`).join('');
+  return `<section class="panel"><h2>Doctors needed per shift</h2><p class="lead">Minimum is a hard rule: the planner reports any shift below it. Target is what it aims for when doctors are free. Maximum is never exceeded, except by fixed cells, which are flagged.</p>
+  <div class="tbl-scroll"><table class="cov"><thead><tr><th></th><th colspan="3" style="color:var(--morning)">Morning</th><th colspan="3" style="color:var(--afternoon)">Afternoon</th></tr><tr><th>Day</th><th>Min</th><th>Target</th><th>Max</th><th>Min</th><th>Target</th><th>Max</th></tr></thead><tbody>${rows}</tbody></table></div></section>`;
+}
+
+function vHolidays(){
+  const list=[...S.holidays].sort((a,b)=>a.date.localeCompare(b.date));
+  const rows=list.map(h=>{const dt=new Date(h.date+'T00:00:00Z'),wd=dt.getUTCDay();
+    return `<tr><td class="num">${h.date}</td><td>${['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][wd]}${wd===0||wd===6?' <span class="note">(weekend)</span>':''}</td><td>${esc(h.name)}</td><td>${esc(h.scope)}</td><td><button class="x" data-delhol="${h.date}" aria-label="Remove ${esc(h.name)}">×</button></td></tr>`;}).join('');
+  return `<section class="panel"><h2>Holidays</h2><p class="lead">Comunidad de Madrid calendar for 2026 and 2027, plus Madrid’s 2026 local holidays (15 May, 9 Nov). Madrid’s 2027 local holidays are not published yet; add them here when they are.</p>
+  <div class="row" style="display:flex;gap:8px;flex-wrap:wrap;align-items:end;margin-bottom:12px">
+    <label class="field"><span>Date</span><input type="date" id="hDate"></label>
+    <label class="field"><span>Name</span><input type="text" id="hName" placeholder="e.g. Madrid local"></label>
+    <label class="field"><span>Scope</span><select id="hScope"><option>Local</option><option>Regional</option><option>Closure</option></select></label>
+    <button class="btn primary" id="addHol">Add holiday</button></div>
+  <div class="tbl-scroll"><table><thead><tr><th>Date</th><th>Day</th><th>Name</th><th>Scope</th><th></th></tr></thead><tbody>${rows}</tbody></table></div></section>`;
+}
+
+/* ---------- slot drawer ---------- */
+function renderDrawer(){
+  if(!openSlot){overlay.innerHTML='';return;}
+  const [iso,s]=openSlot.split('|'), d=R.days.find(x=>x.iso===iso);
+  if(!d){openSlot=null;overlay.innerHTML='';return;}
+  const c=R.cov(d,s), have=R.cnt(iso,s), lk=!!S.manual[openSlot];
+  const rows=S.doctors.map(doc=>{const v=R.res[iso][s][doc.id]||0, o=R.res[iso][s==='M'?'A':'M'][doc.id]||0;
+    const notes=[];const cl=R.cell(doc,d,s);
+    notes.push(cl==='F'?'Fixed':cl==='Y'?'Available':'Unavailable');
+    if(R.absent(doc,iso))notes.push('absent');
+    if(o)notes.push(`works ${SHN[s==='M'?'A':'M'].toLowerCase()} (${fmtV(o)})`);
+    const bad=(cl==='N'&&v)||(R.absent(doc,iso)&&v)||(v+o>doc.dailyMax);
+    return `<div class="drow"><div class="who"><b>${esc(doc.name)}</b><div class="r ${bad?'bad':''}">${esc(notes.join(' · '))}${bad?' · breaks a rule':''}</div></div>
+      <div class="seg" role="group" aria-label="${esc(doc.name)}">${[0,0.5,1].map(x=>`<button data-set="${doc.id}|${x}" aria-pressed="${v===x}">${x===0?'Off':x===0.5?'½':'1'}</button>`).join('')}</div></div>`;}).join('');
+  overlay.innerHTML=`<div class="scrim" data-close></div><aside class="drawer" role="dialog" aria-label="Edit shift">
+    <div class="hd"><div><div class="label" style="color:var(--${s==='M'?'morning':'afternoon'})">${SHN[s]}</div><h2 style="font-size:17px">${dayLabel(iso)}</h2><div class="note">${fmtV(have)} assigned · min ${c.min}, target ${c.target}, max ${c.max}${lk?' · locked':''}</div></div><button class="x" data-close aria-label="Close" style="font-size:22px">×</button></div>
+    <div class="bd">${rows}</div>
+    <div class="ft">${lk?'<button class="btn" id="unlockSlot">Return to automatic</button>':'<span class="note">Changing anyone locks this shift.</span>'}<button class="btn primary" data-close style="margin-left:auto">Done</button></div></aside>`;
+}
+
+/* ---------- events ---------- */
+function toast(msg){const t=document.createElement('div');t.className='toast';t.textContent=msg;document.body.appendChild(t);setTimeout(()=>t.remove(),1800);}
+function changed(){save();render();}
+document.getElementById('prevM').onclick=()=>{S.month=shiftMonth(S.month,-1);changed();};
+document.getElementById('nextM').onclick=()=>{S.month=shiftMonth(S.month,1);changed();};
+document.querySelector('nav.tabs').onclick=e=>{const b=e.target.closest('[data-tab]');if(!b)return;tab=b.dataset.tab;pendingReset=false;try{localStorage.setItem(KEY+'-tab',tab)}catch(x){}render();};
+const doc=id=>S.doctors.find(d=>d.id===id);
+
+document.addEventListener('click',e=>{
+  const t=e.target.closest('button,[data-close]');if(!t)return;
+  if(t.dataset.slot){openSlot=t.dataset.slot;renderDrawer();return;}
+  if(t.hasAttribute('data-close')){openSlot=null;renderDrawer();return;}
+  if(t.dataset.set){const [id,v]=t.dataset.set.split('|');
+    if(!S.manual[openSlot]){const [iso,s]=openSlot.split('|');S.manual[openSlot]={...R.res[iso][s]};}
+    const val=Number(v);if(val)S.manual[openSlot][id]=val;else delete S.manual[openSlot][id];changed();return;}
+  if(t.id==='unlockSlot'){delete S.manual[openSlot];changed();toast('Shift returned to automatic');return;}
+  if(t.dataset.cell){const [id,di,si]=t.dataset.cell.split('|');const c=doc(id).grid[di];const nx={F:'Y',Y:'N',N:'F'};c[si]=nx[c[si]];changed();return;}
+  if(t.dataset.del){S.doctors=S.doctors.filter(d=>d.id!==t.dataset.del);changed();return;}
+  if(t.dataset.addabs){const d=doc(t.dataset.addabs);const f=S.month+'-01';d.absences.push({from:f,to:f,reason:''});changed();return;}
+  if(t.dataset.delabs){const [id,ai]=t.dataset.delabs.split('|');doc(id).absences.splice(Number(ai),1);changed();return;}
+  if(t.dataset.delhol){S.holidays=S.holidays.filter(h=>h.date!==t.dataset.delhol);changed();return;}
+  switch(t.id){
+    case'addDoc':{let n=1;while(S.doctors.some(d=>d.id==='d'+n))n++;S.doctors.push({id:'d'+n,name:'New doctor',pref:'mix',dailyMax:1,wkMin:2,wkMax:5,grid:g('YYYYY','YYYYY'),absences:[]});changed();break;}
+    case'resetAll':pendingReset=true;render();break;
+    case'cancelReset':pendingReset=false;render();break;
+    case'confirmReset':pendingReset=false;S=sample();openSlot=null;changed();toast('Example data restored');break;
+    case'addHol':{const dt=document.getElementById('hDate').value,nm=document.getElementById('hName').value.trim()||'Holiday',sc=document.getElementById('hScope').value;
+      if(!dt){toast('Pick a date first');break;}S.holidays=S.holidays.filter(h=>h.date!==dt);S.holidays.push({date:dt,name:nm,scope:sc});changed();toast('Holiday added');break;}
+    case'toggleCsv':csvOpen=!csvOpen;render();break;
+    case'copyCsv':{const text=csv();navigator.clipboard.writeText(text).then(()=>toast('CSV copied'),()=>{csvOpen=true;render();const ta=document.getElementById('csvText');ta.focus();ta.select();toast('Copy blocked here: text selected, press Ctrl/Cmd+C');});break;}
+    case'unlockAll':Object.keys(S.manual).filter(k=>k.startsWith(S.month)).forEach(k=>delete S.manual[k]);changed();toast('All shifts this month are automatic again');break;
+  }
+});
+document.addEventListener('change',e=>{
+  const t=e.target;
+  if(t.dataset.f){const [id,f]=t.dataset.f.split('|');const d=doc(id);d[f]=(f==='name'||f==='pref')?t.value:Number(t.value);
+    if(f==='wkMin'&&d.wkMin>d.wkMax)d.wkMax=d.wkMin;if(f==='wkMax'&&d.wkMax<d.wkMin)d.wkMin=d.wkMax;changed();}
+  else if(t.dataset.abs){const [id,ai,f]=t.dataset.abs.split('|');const a=doc(id).absences[ai];a[f]=t.value;if(a.from&&a.to&&a.to<a.from)a.to=a.from;changed();}
+  else if(t.dataset.cov){const [i,s,k]=t.dataset.cov.split('|');const c=S.coverage[i][s];c[k]=Math.max(0,Number(t.value)||0);
+    if(c.min>c.target)c.target=c.min;if(c.target>c.max)c.max=c.target;changed();}
+});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&openSlot){openSlot=null;renderDrawer();}});
+render();
+})();
+</script>
+
+</body>
+</html>

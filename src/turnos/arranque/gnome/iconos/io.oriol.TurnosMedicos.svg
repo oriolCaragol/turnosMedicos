@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128">
+  <!-- Turnos médicos: calendario con una cruz médica, en los colores de la aplicación. -->
+  <defs>
+    <clipPath id="hoja"><rect x="14" y="20" width="100" height="90" rx="14"/></clipPath>
+    <linearGradient id="cabecera" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#14868c"/>
+      <stop offset="1" stop-color="#0d6b70"/>
+    </linearGradient>
+  </defs>
+  <!-- grosor del calendario -->
+  <rect x="14" y="26" width="100" height="90" rx="14" fill="#9fb3b7"/>
+  <g clip-path="url(#hoja)">
+    <rect x="14" y="20" width="100" height="90" fill="#ffffff"/>
+    <rect x="14" y="20" width="100" height="30" fill="url(#cabecera)"/>
+    <rect x="14" y="50" width="100" height="2" fill="#0a5559" opacity="0.35"/>
+    <!-- mañana y tarde -->
+    <rect x="24" y="62" width="12" height="9" rx="2.5" fill="#e0a93c"/>
+    <rect x="24" y="77" width="12" height="9" rx="2.5" fill="#6d82cc"/>
+    <rect x="24" y="92" width="12" height="9" rx="2.5" fill="#dbe4e6"/>
+    <rect x="92" y="62" width="12" height="9" rx="2.5" fill="#dbe4e6"/>
+    <rect x="92" y="77" width="12" height="9" rx="2.5" fill="#e0a93c"/>
+    <rect x="92" y="92" width="12" height="9" rx="2.5" fill="#6d82cc"/>
+  </g>
+  <!-- cruz médica -->
+  <path d="M57 58h14a3 3 0 0 1 3 3v10h10a3 3 0 0 1 3 3v14a3 3 0 0 1-3 3H74v10a3 3 0 0 1-3 3H57a3 3 0 0 1-3-3V91H44a3 3 0 0 1-3-3V74a3 3 0 0 1 3-3h10V61a3 3 0 0 1 3-3z" fill="#0d6b70"/>
+  <!-- anillas -->
+  <rect x="36" y="10" width="10" height="24" rx="5" fill="#33454c"/>
+  <rect x="82" y="10" width="10" height="24" rx="5" fill="#33454c"/>
+  <rect x="38" y="12" width="3" height="18" rx="1.5" fill="#ffffff" opacity="0.25"/>
+  <rect x="84" y="12" width="3" height="18" rx="1.5" fill="#ffffff" opacity="0.25"/>
+</svg>

@@ -1,0 +1,64 @@
+.selector {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.muestra {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 2px solid var(--borde);
+  background: var(--hundido);
+  color: var(--texto-suave);
+  font-size: 13px;
+  padding: 0;
+}
+
+.paleta {
+  position: absolute;
+  z-index: 10;
+  top: 36px;
+  left: 0;
+  background: var(--superficie);
+  border: 1px solid var(--borde);
+  border-radius: 8px;
+  padding: 10px;
+  box-shadow: 0 6px 18px rgb(0 0 0 / 18%);
+  width: 220px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.colores {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 5px;
+}
+
+.color {
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  border: 1px solid rgb(0 0 0 / 15%);
+  padding: 0;
+}
+
+.color[aria-pressed="true"] {
+  outline: 2px solid var(--texto);
+  outline-offset: 2px;
+}
+
+.otras {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 6px;
+}
+
+.otras input[type="color"] {
+  width: 36px;
+  height: 26px;
+  padding: 0 2px;
+  vertical-align: middle;
+}

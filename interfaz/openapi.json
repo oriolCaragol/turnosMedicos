@@ -1,0 +1,5814 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "turnosMedicos",
+    "version": "2.12.0"
+  },
+  "paths": {
+    "/api/eventos": {
+      "get": {
+        "tags": [
+          "eventos"
+        ],
+        "summary": "Eventos",
+        "operationId": "eventos_api_eventos_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/sesion": {
+      "post": {
+        "tags": [
+          "sesión"
+        ],
+        "summary": "Iniciar Sesion",
+        "operationId": "iniciar_sesion_api_sesion_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InicioSesion"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SesionIniciada"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "sesión"
+        ],
+        "summary": "Cerrar Sesion",
+        "operationId": "cerrar_sesion_api_sesion_delete",
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          }
+        }
+      }
+    },
+    "/api/yo/contrasena": {
+      "post": {
+        "tags": [
+          "sesión"
+        ],
+        "summary": "Cambiar Contrasena",
+        "operationId": "cambiar_contrasena_api_yo_contrasena_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CambioContrasena"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/usuarios": {
+      "get": {
+        "tags": [
+          "cuentas"
+        ],
+        "summary": "Listar Usuarios",
+        "operationId": "listar_usuarios_api_usuarios_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/UsuarioSalida"
+                  },
+                  "type": "array",
+                  "title": "Response Listar Usuarios Api Usuarios Get"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "cuentas"
+        ],
+        "summary": "Crear Usuario",
+        "description": "Cuenta nueva con una contraseña temporal, que se muestra solo esta vez.",
+        "operationId": "crear_usuario_api_usuarios_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UsuarioNuevo"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContrasenaTemporal"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/usuarios/{usuario_id}": {
+      "put": {
+        "tags": [
+          "cuentas"
+        ],
+        "summary": "Modificar Usuario",
+        "operationId": "modificar_usuario_api_usuarios__usuario_id__put",
+        "parameters": [
+          {
+            "name": "usuario_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Usuario Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UsuarioEntrada"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsuarioSalida"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/usuarios/{usuario_id}/restablecer": {
+      "post": {
+        "tags": [
+          "cuentas"
+        ],
+        "summary": "Restablecer",
+        "description": "Contraseña temporal nueva (para quien la ha olvidado); cierra sus sesiones.",
+        "operationId": "restablecer_api_usuarios__usuario_id__restablecer_post",
+        "parameters": [
+          {
+            "name": "usuario_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Usuario Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContrasenaTemporal"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/sesiones": {
+      "get": {
+        "tags": [
+          "cuentas"
+        ],
+        "summary": "Listar Sesiones",
+        "description": "Dispositivos conectados.",
+        "operationId": "listar_sesiones_api_sesiones_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/SesionAbierta"
+                  },
+                  "type": "array",
+                  "title": "Response Listar Sesiones Api Sesiones Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/sesiones/{sesion_id}": {
+      "delete": {
+        "tags": [
+          "cuentas"
+        ],
+        "summary": "Cerrar Otra Sesion",
+        "operationId": "cerrar_otra_sesion_api_sesiones__sesion_id__delete",
+        "parameters": [
+          {
+            "name": "sesion_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Sesion Id"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/servidor/publico": {
+      "get": {
+        "tags": [
+          "servidor"
+        ],
+        "summary": "Publico",
+        "operationId": "publico_api_servidor_publico_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServidorPublico"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/servidor": {
+      "get": {
+        "tags": [
+          "servidor"
+        ],
+        "summary": "Informacion",
+        "operationId": "informacion_api_servidor_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InfoServidor"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/servidor/qr.svg": {
+      "get": {
+        "tags": [
+          "servidor"
+        ],
+        "summary": "Qr",
+        "description": "Código QR de una de las direcciones del servidor (para abrirla desde el móvil).",
+        "operationId": "qr_api_servidor_qr_svg_get",
+        "parameters": [
+          {
+            "name": "direccion",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Direccion"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/servidor/copias": {
+      "post": {
+        "tags": [
+          "servidor"
+        ],
+        "summary": "Copiar",
+        "description": "Copia de seguridad inmediata (además de la diaria).",
+        "operationId": "copiar_api_servidor_copias_post",
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CopiaServidor"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/solicitudes": {
+      "get": {
+        "tags": [
+          "solicitudes"
+        ],
+        "summary": "Listar",
+        "description": "Médico: las suyas y los intercambios que le proponen. Planificador: todas. Las\nabiertas primero; después, las más recientes.",
+        "operationId": "listar_api_solicitudes_get",
+        "parameters": [
+          {
+            "name": "estado",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Estado"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SolicitudSalida"
+                  },
+                  "title": "Response Listar Api Solicitudes Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "solicitudes"
+        ],
+        "summary": "Crear",
+        "operationId": "crear_api_solicitudes_post",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SolicitudEntrada"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SolicitudSalida"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/solicitudes/{solicitud_id}/retirar": {
+      "post": {
+        "tags": [
+          "solicitudes"
+        ],
+        "summary": "Retirar",
+        "operationId": "retirar_api_solicitudes__solicitud_id__retirar_post",
+        "parameters": [
+          {
+            "name": "solicitud_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Solicitud Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SolicitudSalida"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/solicitudes/{solicitud_id}/aceptar": {
+      "post": {
+        "tags": [
+          "solicitudes"
+        ],
+        "summary": "Aceptar",
+        "description": "El otro médico de un intercambio acepta (llega al planificador) o no (D-S8).",
+        "operationId": "aceptar_api_solicitudes__solicitud_id__aceptar_post",
+        "parameters": [
+          {
+            "name": "solicitud_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Solicitud Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RespuestaCompanero"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SolicitudSalida"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/solicitudes/{solicitud_id}/efectos": {
+      "get": {
+        "tags": [
+          "solicitudes"
+        ],
+        "summary": "Efectos",
+        "description": "Qué avisos produciría aprobarla (se prueba y se deshace).",
+        "operationId": "efectos_api_solicitudes__solicitud_id__efectos_get",
+        "parameters": [
+          {
+            "name": "solicitud_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Solicitud Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EfectosSolicitud"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/solicitudes/{solicitud_id}/aprobar": {
+      "post": {
+        "tags": [
+          "solicitudes"
+        ],
+        "summary": "Aprobar",
+        "operationId": "aprobar_api_solicitudes__solicitud_id__aprobar_post",
+        "parameters": [
+          {
+            "name": "solicitud_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Solicitud Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Resolucion"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SolicitudSalida"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/solicitudes/{solicitud_id}/rechazar": {
+      "post": {
+        "tags": [
+          "solicitudes"
+        ],
+        "summary": "Rechazar",
+        "operationId": "rechazar_api_solicitudes__solicitud_id__rechazar_post",
+        "parameters": [
+          {
+            "name": "solicitud_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Solicitud Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Resolucion"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SolicitudSalida"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/yo": {
+      "get": {
+        "tags": [
+          "sesión"
+        ],
+        "summary": "Yo",
+        "description": "Quién está usando la aplicación (en el modo personal, un administrador sin cuenta).",
+        "operationId": "yo_api_yo_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Yo"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/medicos": {
+      "get": {
+        "tags": [
+          "médicos"
+        ],
+        "summary": "Listar",
+        "operationId": "listar_api_medicos_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/Medico"
+                  },
+                  "type": "array",
+                  "title": "Response Listar Api Medicos Get"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "médicos"
+        ],
+        "summary": "Crear",
+        "operationId": "crear_api_medicos_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MedicoEntrada"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Medico"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/medicos/{medico_id}": {
+      "get": {
+        "tags": [
+          "médicos"
+        ],
+        "summary": "Obtener",
+        "operationId": "obtener_api_medicos__medico_id__get",
+        "parameters": [
+          {
+            "name": "medico_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Medico Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Medico"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "médicos"
+        ],
+        "summary": "Modificar",
+        "operationId": "modificar_api_medicos__medico_id__put",
+        "parameters": [
+          {
+            "name": "medico_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Medico Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MedicoEntrada"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Medico"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "médicos"
+        ],
+        "summary": "Borrar",
+        "operationId": "borrar_api_medicos__medico_id__delete",
+        "parameters": [
+          {
+            "name": "medico_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Medico Id"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/medicos/{medico_id}/reglas": {
+      "get": {
+        "tags": [
+          "médicos"
+        ],
+        "summary": "Obtener Reglas",
+        "operationId": "obtener_reglas_api_medicos__medico_id__reglas_get",
+        "parameters": [
+          {
+            "name": "medico_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Medico Id"
+            }
+          },
+          {
+            "name": "fecha",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "description": "Fecha de vigencia",
+              "title": "Fecha"
+            },
+            "description": "Fecha de vigencia"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReglasLeidas"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "médicos"
+        ],
+        "summary": "Guardar",
+        "operationId": "guardar_api_medicos__medico_id__reglas_put",
+        "parameters": [
+          {
+            "name": "medico_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Medico Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReglasGuardar"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReglasLeidas"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/ausencias": {
+      "get": {
+        "tags": [
+          "ausencias"
+        ],
+        "summary": "Listar",
+        "description": "Ausencias que se solapan con el rango [desde, hasta].",
+        "operationId": "listar_api_ausencias_get",
+        "parameters": [
+          {
+            "name": "medico_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Medico Id"
+            }
+          },
+          {
+            "name": "desde",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Desde"
+            }
+          },
+          {
+            "name": "hasta",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Hasta"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Ausencia"
+                  },
+                  "title": "Response Listar Api Ausencias Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "ausencias"
+        ],
+        "summary": "Crear",
+        "operationId": "crear_api_ausencias_post",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AusenciaEntrada"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Ausencia"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/ausencias/{ausencia_id}": {
+      "put": {
+        "tags": [
+          "ausencias"
+        ],
+        "summary": "Modificar",
+        "operationId": "modificar_api_ausencias__ausencia_id__put",
+        "parameters": [
+          {
+            "name": "ausencia_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Ausencia Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AusenciaEntrada"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Ausencia"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "ausencias"
+        ],
+        "summary": "Borrar",
+        "operationId": "borrar_api_ausencias__ausencia_id__delete",
+        "parameters": [
+          {
+            "name": "ausencia_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Ausencia Id"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/festivos": {
+      "get": {
+        "tags": [
+          "festivos"
+        ],
+        "summary": "Listar",
+        "operationId": "listar_api_festivos_get",
+        "parameters": [
+          {
+            "name": "anio",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Anio"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Festivo"
+                  },
+                  "title": "Response Listar Api Festivos Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "festivos"
+        ],
+        "summary": "Crear",
+        "operationId": "crear_api_festivos_post",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FestivoEntrada"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Festivo"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/festivos/anios": {
+      "get": {
+        "tags": [
+          "festivos"
+        ],
+        "summary": "Anios",
+        "description": "Años con festivos cargados (precargados o buscados en línea) y si están completos.",
+        "operationId": "anios_api_festivos_anios_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/AnioFestivos"
+                  },
+                  "type": "array",
+                  "title": "Response Anios Api Festivos Anios Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/festivos/{festivo_id}": {
+      "delete": {
+        "tags": [
+          "festivos"
+        ],
+        "summary": "Borrar",
+        "operationId": "borrar_api_festivos__festivo_id__delete",
+        "parameters": [
+          {
+            "name": "festivo_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Festivo Id"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/festivos/restaurar/{anio}": {
+      "post": {
+        "tags": [
+          "festivos"
+        ],
+        "summary": "Restaurar",
+        "description": "Vuelve a añadir los festivos precargados del año que falten. Devuelve los añadidos.",
+        "operationId": "restaurar_api_festivos_restaurar__anio__post",
+        "parameters": [
+          {
+            "name": "anio",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Anio"
+            }
+          },
+          {
+            "name": "calendario",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "madrid",
+              "title": "Calendario"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Festivo"
+                  },
+                  "title": "Response Restaurar Api Festivos Restaurar  Anio  Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/festivos/municipios": {
+      "get": {
+        "tags": [
+          "festivos"
+        ],
+        "summary": "Buscar Municipio",
+        "operationId": "buscar_municipio_api_festivos_municipios_get",
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "",
+              "title": "Q"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Municipio"
+                  },
+                  "title": "Response Buscar Municipio Api Festivos Municipios Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/festivos/municipios/{ine}": {
+      "get": {
+        "tags": [
+          "festivos"
+        ],
+        "summary": "Municipio",
+        "operationId": "municipio_api_festivos_municipios__ine__get",
+        "parameters": [
+          {
+            "name": "ine",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Ine"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Municipio"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/festivos/oficiales/{anio}": {
+      "get": {
+        "tags": [
+          "festivos"
+        ],
+        "summary": "Buscar Oficiales",
+        "description": "Festivos oficiales del municipio del centro, comparados con los guardados.",
+        "operationId": "buscar_oficiales_api_festivos_oficiales__anio__get",
+        "parameters": [
+          {
+            "name": "anio",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Anio"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BusquedaFestivos"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "festivos"
+        ],
+        "summary": "Cargar Oficiales",
+        "description": "Añade los festivos oficiales que faltan (no borra ni cambia los que hay).\nDevuelve los añadidos.",
+        "operationId": "cargar_oficiales_api_festivos_oficiales__anio__post",
+        "parameters": [
+          {
+            "name": "anio",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Anio"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Festivo"
+                  },
+                  "title": "Response Cargar Oficiales Api Festivos Oficiales  Anio  Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/cobertura/semanal": {
+      "get": {
+        "tags": [
+          "cobertura"
+        ],
+        "summary": "Semanal",
+        "description": "Las 20 combinaciones día × mitad; las no definidas valen 0–0.",
+        "operationId": "semanal_api_cobertura_semanal_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/CoberturaSemanal"
+                  },
+                  "type": "array",
+                  "title": "Response Semanal Api Cobertura Semanal Get"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "cobertura"
+        ],
+        "summary": "Guardar Semanal",
+        "operationId": "guardar_semanal_api_cobertura_semanal_put",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "items": {
+                  "$ref": "#/components/schemas/CoberturaSemanal"
+                },
+                "type": "array",
+                "title": "Datos"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/CoberturaSemanal"
+                  },
+                  "type": "array",
+                  "title": "Response Guardar Semanal Api Cobertura Semanal Put"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/cobertura/fechas": {
+      "get": {
+        "tags": [
+          "cobertura"
+        ],
+        "summary": "Fechas",
+        "operationId": "fechas_api_cobertura_fechas_get",
+        "parameters": [
+          {
+            "name": "desde",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Desde"
+            }
+          },
+          {
+            "name": "hasta",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Hasta"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CoberturaFecha"
+                  },
+                  "title": "Response Fechas Api Cobertura Fechas Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/cobertura/fechas/{fecha}": {
+      "put": {
+        "tags": [
+          "cobertura"
+        ],
+        "summary": "Guardar Fecha",
+        "description": "Excepción para una fecha concreta: sustituye la cobertura semanal ese día.",
+        "operationId": "guardar_fecha_api_cobertura_fechas__fecha__put",
+        "parameters": [
+          {
+            "name": "fecha",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "title": "Fecha"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/CoberturaMitad"
+                },
+                "title": "Datos"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CoberturaFecha"
+                  },
+                  "title": "Response Guardar Fecha Api Cobertura Fechas  Fecha  Put"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "cobertura"
+        ],
+        "summary": "Borrar Fecha",
+        "operationId": "borrar_fecha_api_cobertura_fechas__fecha__delete",
+        "parameters": [
+          {
+            "name": "fecha",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "title": "Fecha"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/horarios": {
+      "get": {
+        "tags": [
+          "configuración"
+        ],
+        "summary": "Horarios",
+        "operationId": "horarios_api_horarios_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/HorarioTurno"
+                  },
+                  "type": "array",
+                  "title": "Response Horarios Api Horarios Get"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "configuración"
+        ],
+        "summary": "Guardar Horarios",
+        "operationId": "guardar_horarios_api_horarios_put",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "items": {
+                  "$ref": "#/components/schemas/HorarioTurno"
+                },
+                "type": "array",
+                "title": "Datos"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/HorarioTurno"
+                  },
+                  "type": "array",
+                  "title": "Response Guardar Horarios Api Horarios Put"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/ajustes": {
+      "get": {
+        "tags": [
+          "configuración"
+        ],
+        "summary": "Ajustes",
+        "operationId": "ajustes_api_ajustes_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Ajustes"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "configuración"
+        ],
+        "summary": "Guardar",
+        "operationId": "guardar_api_ajustes_put",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Ajustes"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Ajustes"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/estado": {
+      "get": {
+        "tags": [
+          "configuración"
+        ],
+        "summary": "Estado",
+        "operationId": "estado_api_estado_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Estado"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/copia-de-seguridad": {
+      "get": {
+        "tags": [
+          "configuración"
+        ],
+        "summary": "Descargar Copia",
+        "description": "Copia consistente del fichero de datos (SQLite), para guardarla aparte.",
+        "operationId": "descargar_copia_api_copia_de_seguridad_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response"
+          }
+        }
+      }
+    },
+    "/api/importar": {
+      "post": {
+        "tags": [
+          "configuración"
+        ],
+        "summary": "Importar",
+        "description": "Sustituye todos los datos por los de una copia (el cuerpo es el fichero SQLite).\n\nAntes se guarda una copia de los datos actuales junto al fichero de datos.",
+        "operationId": "importar_api_importar_post",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultadoImportar"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/registro": {
+      "get": {
+        "tags": [
+          "configuración"
+        ],
+        "summary": "Registro",
+        "description": "Últimos cambios: quién, cuándo y qué (diseño del modo servidor, 6.2).",
+        "operationId": "registro_api_registro_get",
+        "parameters": [
+          {
+            "name": "limite",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 100,
+              "title": "Limite"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CambioRegistrado"
+                  },
+                  "title": "Response Registro Api Registro Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/periodos/{anio}/{mes}": {
+      "get": {
+        "tags": [
+          "calendario"
+        ],
+        "summary": "Obtener",
+        "operationId": "obtener_api_periodos__anio___mes__get",
+        "parameters": [
+          {
+            "name": "anio",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Anio"
+            }
+          },
+          {
+            "name": "mes",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Mes"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Calendario"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/periodos/{anio}/{mes}/generar": {
+      "post": {
+        "tags": [
+          "calendario"
+        ],
+        "summary": "Generar",
+        "operationId": "generar_api_periodos__anio___mes__generar_post",
+        "parameters": [
+          {
+            "name": "anio",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Anio"
+            }
+          },
+          {
+            "name": "mes",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Mes"
+            }
+          },
+          {
+            "name": "X-Version-Mes",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Version-Mes"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Generar"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Calendario"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/periodos/{anio}/{mes}/cambios": {
+      "post": {
+        "tags": [
+          "calendario"
+        ],
+        "summary": "Cambios",
+        "operationId": "cambios_api_periodos__anio___mes__cambios_post",
+        "parameters": [
+          {
+            "name": "anio",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Anio"
+            }
+          },
+          {
+            "name": "mes",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Mes"
+            }
+          },
+          {
+            "name": "X-Version-Mes",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Version-Mes"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Cambio"
+                },
+                "title": "Datos"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Calendario"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/periodos/{anio}/{mes}/liberar": {
+      "post": {
+        "tags": [
+          "calendario"
+        ],
+        "summary": "Liberar",
+        "description": "«Volver a automático»: desbloquea y retira vetos del turno, el día o el mes.",
+        "operationId": "liberar_api_periodos__anio___mes__liberar_post",
+        "parameters": [
+          {
+            "name": "anio",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Anio"
+            }
+          },
+          {
+            "name": "mes",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Mes"
+            }
+          },
+          {
+            "name": "X-Version-Mes",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Version-Mes"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Liberar"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Calendario"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/periodos/{anio}/{mes}/manual": {
+      "put": {
+        "tags": [
+          "calendario"
+        ],
+        "summary": "Restaurar",
+        "description": "Sustituye asignaciones y vetos por los indicados (deshacer / rehacer).",
+        "operationId": "restaurar_api_periodos__anio___mes__manual_put",
+        "parameters": [
+          {
+            "name": "anio",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Anio"
+            }
+          },
+          {
+            "name": "mes",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Mes"
+            }
+          },
+          {
+            "name": "X-Version-Mes",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Version-Mes"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EstadoManual"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Calendario"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/periodos/{anio}/{mes}/carga/{medico_id}": {
+      "put": {
+        "tags": [
+          "calendario"
+        ],
+        "summary": "Carga Manual",
+        "operationId": "carga_manual_api_periodos__anio___mes__carga__medico_id__put",
+        "parameters": [
+          {
+            "name": "anio",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Anio"
+            }
+          },
+          {
+            "name": "mes",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Mes"
+            }
+          },
+          {
+            "name": "medico_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Medico Id"
+            }
+          },
+          {
+            "name": "X-Version-Mes",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Version-Mes"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CargaManual"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Calendario"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/periodos/{anio}/{mes}/publicar": {
+      "post": {
+        "tags": [
+          "calendario"
+        ],
+        "summary": "Publicar",
+        "operationId": "publicar_api_periodos__anio___mes__publicar_post",
+        "parameters": [
+          {
+            "name": "anio",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Anio"
+            }
+          },
+          {
+            "name": "mes",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Mes"
+            }
+          },
+          {
+            "name": "X-Version-Mes",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Version-Mes"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Calendario"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/periodos/{anio}/{mes}/reabrir": {
+      "post": {
+        "tags": [
+          "calendario"
+        ],
+        "summary": "Reabrir",
+        "operationId": "reabrir_api_periodos__anio___mes__reabrir_post",
+        "parameters": [
+          {
+            "name": "anio",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Anio"
+            }
+          },
+          {
+            "name": "mes",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Mes"
+            }
+          },
+          {
+            "name": "X-Version-Mes",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Version-Mes"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Calendario"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/periodos/{anio}/{mes}/urgencias-domicilios.xlsx": {
+      "get": {
+        "tags": [
+          "calendario"
+        ],
+        "summary": "Exportar Roles",
+        "description": "Urgencias y domicilios del mes en XLSX: quién hace cada papel cada día y cuántas\nveces cada médico.",
+        "operationId": "exportar_roles_api_periodos__anio___mes__urgencias_domicilios_xlsx_get",
+        "parameters": [
+          {
+            "name": "anio",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Anio"
+            }
+          },
+          {
+            "name": "mes",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Mes"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": {}
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/periodos/{anio}/{mes}/exportar.xlsx": {
+      "get": {
+        "tags": [
+          "calendario"
+        ],
+        "summary": "Exportar",
+        "description": "Calendario del mes en XLSX (hojas Calendario, Por médico y Resumen).",
+        "operationId": "exportar_api_periodos__anio___mes__exportar_xlsx_get",
+        "parameters": [
+          {
+            "name": "anio",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Anio"
+            }
+          },
+          {
+            "name": "mes",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Mes"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": {}
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/rotaciones": {
+      "get": {
+        "tags": [
+          "turnos rotativos"
+        ],
+        "summary": "Listar",
+        "operationId": "listar_api_rotaciones_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/Rotacion"
+                  },
+                  "type": "array",
+                  "title": "Response Listar Api Rotaciones Get"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "turnos rotativos"
+        ],
+        "summary": "Crear",
+        "operationId": "crear_api_rotaciones_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RotacionEntrada"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Rotacion"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/rotaciones/{rotacion_id}": {
+      "put": {
+        "tags": [
+          "turnos rotativos"
+        ],
+        "summary": "Modificar",
+        "operationId": "modificar_api_rotaciones__rotacion_id__put",
+        "parameters": [
+          {
+            "name": "rotacion_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Rotacion Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RotacionEntrada"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Rotacion"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "turnos rotativos"
+        ],
+        "summary": "Borrar",
+        "operationId": "borrar_api_rotaciones__rotacion_id__delete",
+        "parameters": [
+          {
+            "name": "rotacion_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Rotacion Id"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/periodos/publicados": {
+      "get": {
+        "tags": [
+          "calendario"
+        ],
+        "summary": "Publicados",
+        "description": "Meses publicados, del más reciente al más antiguo (los que pueden ver los médicos).",
+        "operationId": "publicados_api_periodos_publicados_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/MesPublicado"
+                  },
+                  "type": "array",
+                  "title": "Response Publicados Api Periodos Publicados Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Ajustes": {
+        "properties": {
+          "todos_trabajan": {
+            "type": "boolean",
+            "title": "Todos Trabajan",
+            "description": "Cada médico tiene algún turno cada día laborable, salvo ausencia o sin turnos posibles",
+            "default": true
+          },
+          "modo_carga": {
+            "type": "string",
+            "enum": [
+              "RANGOS",
+              "PRESENCIA"
+            ],
+            "title": "Modo Carga",
+            "description": "RANGOS: turnos al mes mínimo y máximo de cada médico. PRESENCIA: todos los días salvo ausencia, sin rangos",
+            "default": "RANGOS"
+          },
+          "roles_segun_presencia": {
+            "type": "boolean",
+            "title": "Roles Segun Presencia",
+            "description": "Urgencias y domicilios en proporción a la presencia de cada médico en el mes",
+            "default": true
+          },
+          "prioridad_roles": {
+            "type": "string",
+            "enum": [
+              "URGENCIAS",
+              "DOMICILIOS",
+              "IGUAL"
+            ],
+            "title": "Prioridad Roles",
+            "description": "Papel que se reparte por igual antes; si hay que forzar una desigualdad, va al otro",
+            "default": "URGENCIAS"
+          },
+          "mostrar_cobertura": {
+            "type": "boolean",
+            "title": "Mostrar Cobertura",
+            "description": "Mostrar en cada turno del calendario los médicos asignados frente a los necesarios",
+            "default": false
+          },
+          "municipio": {
+            "type": "string",
+            "pattern": "^\\d{5}$",
+            "title": "Municipio",
+            "description": "Código INE del municipio del centro",
+            "default": "28079"
+          }
+        },
+        "type": "object",
+        "title": "Ajustes",
+        "description": "Ajustes generales de la aplicación."
+      },
+      "AmbitoFestivo": {
+        "type": "string",
+        "enum": [
+          "NACIONAL",
+          "AUTONOMICO",
+          "LOCAL",
+          "OTRO"
+        ],
+        "title": "AmbitoFestivo"
+      },
+      "AnioFestivos": {
+        "properties": {
+          "anio": {
+            "type": "integer",
+            "title": "Anio"
+          },
+          "calendario": {
+            "type": "string",
+            "title": "Calendario"
+          },
+          "completo": {
+            "type": "boolean",
+            "title": "Completo"
+          },
+          "precargado": {
+            "type": "boolean",
+            "title": "Precargado",
+            "description": "Sus festivos vienen con la aplicación (se pueden restaurar)",
+            "default": false
+          }
+        },
+        "type": "object",
+        "required": [
+          "anio",
+          "calendario",
+          "completo"
+        ],
+        "title": "AnioFestivos"
+      },
+      "AsignacionCalendario": {
+        "properties": {
+          "medico_id": {
+            "type": "integer",
+            "title": "Medico Id"
+          },
+          "fecha": {
+            "type": "string",
+            "format": "date",
+            "title": "Fecha"
+          },
+          "mitad": {
+            "$ref": "#/components/schemas/Mitad"
+          },
+          "origen": {
+            "$ref": "#/components/schemas/OrigenAsignacion"
+          },
+          "bloqueada": {
+            "type": "boolean",
+            "title": "Bloqueada"
+          }
+        },
+        "type": "object",
+        "required": [
+          "medico_id",
+          "fecha",
+          "mitad",
+          "origen",
+          "bloqueada"
+        ],
+        "title": "AsignacionCalendario"
+      },
+      "Ausencia": {
+        "properties": {
+          "medico_id": {
+            "type": "integer",
+            "title": "Medico Id"
+          },
+          "desde": {
+            "type": "string",
+            "format": "date",
+            "title": "Desde"
+          },
+          "hasta": {
+            "type": "string",
+            "format": "date",
+            "title": "Hasta"
+          },
+          "turno": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Turno"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "None = día completo"
+          },
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "medico_id",
+          "desde",
+          "hasta",
+          "id"
+        ],
+        "title": "Ausencia"
+      },
+      "AusenciaEntrada": {
+        "properties": {
+          "medico_id": {
+            "type": "integer",
+            "title": "Medico Id"
+          },
+          "desde": {
+            "type": "string",
+            "format": "date",
+            "title": "Desde"
+          },
+          "hasta": {
+            "type": "string",
+            "format": "date",
+            "title": "Hasta"
+          },
+          "turno": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Turno"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "None = día completo"
+          }
+        },
+        "type": "object",
+        "required": [
+          "medico_id",
+          "desde",
+          "hasta"
+        ],
+        "title": "AusenciaEntrada"
+      },
+      "AvisoCalendario": {
+        "properties": {
+          "tipo": {
+            "$ref": "#/components/schemas/TipoAviso"
+          },
+          "mensaje": {
+            "type": "string",
+            "title": "Mensaje"
+          },
+          "fecha": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fecha"
+          },
+          "medico_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Medico Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "tipo",
+          "mensaje"
+        ],
+        "title": "AvisoCalendario"
+      },
+      "BusquedaFestivos": {
+        "properties": {
+          "anio": {
+            "type": "integer",
+            "title": "Anio"
+          },
+          "municipio": {
+            "$ref": "#/components/schemas/Municipio"
+          },
+          "festivos": {
+            "items": {
+              "$ref": "#/components/schemas/FestivoOficial"
+            },
+            "type": "array",
+            "title": "Festivos"
+          },
+          "solo_en_tus_datos": {
+            "items": {
+              "$ref": "#/components/schemas/Festivo"
+            },
+            "type": "array",
+            "title": "Solo En Tus Datos",
+            "description": "Festivos del año que no aparecen en las fuentes"
+          },
+          "fuentes": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Fuentes"
+          },
+          "avisos": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Avisos"
+          },
+          "completo": {
+            "type": "boolean",
+            "title": "Completo",
+            "description": "Incluye los dos festivos locales"
+          }
+        },
+        "type": "object",
+        "required": [
+          "anio",
+          "municipio",
+          "festivos",
+          "solo_en_tus_datos",
+          "fuentes",
+          "avisos",
+          "completo"
+        ],
+        "title": "BusquedaFestivos"
+      },
+      "Calendario": {
+        "properties": {
+          "anio": {
+            "type": "integer",
+            "title": "Anio"
+          },
+          "mes": {
+            "type": "integer",
+            "title": "Mes"
+          },
+          "estado": {
+            "type": "string",
+            "title": "Estado",
+            "description": "SIN_GENERAR, BORRADOR o PUBLICADO"
+          },
+          "version": {
+            "type": "integer",
+            "title": "Version",
+            "description": "Sube con cada cambio del mes (se envía en X-Version-Mes)",
+            "default": 0
+          },
+          "carga_por_rangos": {
+            "type": "boolean",
+            "title": "Carga Por Rangos",
+            "description": "False con el modo «según la presencia»: no hay rangos de carga que mostrar",
+            "default": true
+          },
+          "publicado_en": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Publicado En"
+          },
+          "dias": {
+            "items": {
+              "$ref": "#/components/schemas/Dia"
+            },
+            "type": "array",
+            "title": "Dias"
+          },
+          "cobertura": {
+            "items": {
+              "$ref": "#/components/schemas/CoberturaDia"
+            },
+            "type": "array",
+            "title": "Cobertura"
+          },
+          "medicos": {
+            "items": {
+              "$ref": "#/components/schemas/MedicoCalendario"
+            },
+            "type": "array",
+            "title": "Medicos"
+          },
+          "asignaciones": {
+            "items": {
+              "$ref": "#/components/schemas/AsignacionCalendario"
+            },
+            "type": "array",
+            "title": "Asignaciones"
+          },
+          "vetos": {
+            "items": {
+              "$ref": "#/components/schemas/VetoCalendario"
+            },
+            "type": "array",
+            "title": "Vetos"
+          },
+          "roles": {
+            "items": {
+              "$ref": "#/components/schemas/RolCalendario"
+            },
+            "type": "array",
+            "title": "Roles",
+            "default": []
+          },
+          "avisos": {
+            "items": {
+              "$ref": "#/components/schemas/AvisoCalendario"
+            },
+            "type": "array",
+            "title": "Avisos"
+          }
+        },
+        "type": "object",
+        "required": [
+          "anio",
+          "mes",
+          "estado",
+          "publicado_en",
+          "dias",
+          "cobertura",
+          "medicos",
+          "asignaciones",
+          "vetos",
+          "avisos"
+        ],
+        "title": "Calendario"
+      },
+      "Cambio": {
+        "properties": {
+          "medico_id": {
+            "type": "integer",
+            "title": "Medico Id"
+          },
+          "fecha": {
+            "type": "string",
+            "format": "date",
+            "title": "Fecha"
+          },
+          "mitades": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/Mitad"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Mitades"
+          },
+          "bloqueada": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Bloqueada"
+          },
+          "rol": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Rol"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "medico_id",
+          "fecha"
+        ],
+        "title": "Cambio",
+        "description": "Un cambio manual; se indica exactamente uno de:\n- `mitades`: deja al médico ese día exactamente en esas mitades;\n- `bloqueada`: bloquea o desbloquea sus asignaciones de ese día;\n- `rol`: le pone de urgencias o domicilios esa tarde."
+      },
+      "CambioContrasena": {
+        "properties": {
+          "actual": {
+            "type": "string",
+            "maxLength": 200,
+            "title": "Actual"
+          },
+          "nueva": {
+            "type": "string",
+            "maxLength": 200,
+            "title": "Nueva"
+          }
+        },
+        "type": "object",
+        "required": [
+          "actual",
+          "nueva"
+        ],
+        "title": "CambioContrasena"
+      },
+      "CambioRegistrado": {
+        "properties": {
+          "momento": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Momento"
+          },
+          "usuario": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Usuario"
+          },
+          "accion": {
+            "type": "string",
+            "title": "Accion"
+          },
+          "ruta": {
+            "type": "string",
+            "title": "Ruta"
+          },
+          "anio": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Anio"
+          },
+          "mes": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Mes"
+          }
+        },
+        "type": "object",
+        "required": [
+          "momento",
+          "usuario",
+          "accion",
+          "ruta",
+          "anio",
+          "mes"
+        ],
+        "title": "CambioRegistrado"
+      },
+      "CargaManual": {
+        "properties": {
+          "minimo": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Minimo"
+          },
+          "maximo": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Maximo"
+          }
+        },
+        "type": "object",
+        "title": "CargaManual",
+        "description": "Rango del mes en medios turnos; None = usar el calculado."
+      },
+      "CeldaElegibilidad": {
+        "properties": {
+          "dia_semana": {
+            "type": "integer",
+            "maximum": 4.0,
+            "minimum": 0.0,
+            "title": "Dia Semana",
+            "description": "0 = lunes … 4 = viernes"
+          },
+          "turno": {
+            "$ref": "#/components/schemas/Turno"
+          },
+          "valor": {
+            "$ref": "#/components/schemas/Elegibilidad"
+          }
+        },
+        "type": "object",
+        "required": [
+          "dia_semana",
+          "turno",
+          "valor"
+        ],
+        "title": "CeldaElegibilidad"
+      },
+      "CoberturaDia": {
+        "properties": {
+          "fecha": {
+            "type": "string",
+            "format": "date",
+            "title": "Fecha"
+          },
+          "mitad": {
+            "$ref": "#/components/schemas/Mitad"
+          },
+          "minimo": {
+            "type": "integer",
+            "title": "Minimo"
+          },
+          "maximo": {
+            "type": "integer",
+            "title": "Maximo"
+          }
+        },
+        "type": "object",
+        "required": [
+          "fecha",
+          "mitad",
+          "minimo",
+          "maximo"
+        ],
+        "title": "CoberturaDia"
+      },
+      "CoberturaFecha": {
+        "properties": {
+          "mitad": {
+            "$ref": "#/components/schemas/Mitad"
+          },
+          "minimo": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Minimo"
+          },
+          "maximo": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Maximo"
+          },
+          "fecha": {
+            "type": "string",
+            "format": "date",
+            "title": "Fecha"
+          }
+        },
+        "type": "object",
+        "required": [
+          "mitad",
+          "minimo",
+          "maximo",
+          "fecha"
+        ],
+        "title": "CoberturaFecha"
+      },
+      "CoberturaMitad": {
+        "properties": {
+          "mitad": {
+            "$ref": "#/components/schemas/Mitad"
+          },
+          "minimo": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Minimo"
+          },
+          "maximo": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Maximo"
+          }
+        },
+        "type": "object",
+        "required": [
+          "mitad",
+          "minimo",
+          "maximo"
+        ],
+        "title": "CoberturaMitad"
+      },
+      "CoberturaSemanal": {
+        "properties": {
+          "mitad": {
+            "$ref": "#/components/schemas/Mitad"
+          },
+          "minimo": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Minimo"
+          },
+          "maximo": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Maximo"
+          },
+          "dia_semana": {
+            "type": "integer",
+            "maximum": 4.0,
+            "minimum": 0.0,
+            "title": "Dia Semana",
+            "description": "0 = lunes … 4 = viernes"
+          }
+        },
+        "type": "object",
+        "required": [
+          "mitad",
+          "minimo",
+          "maximo",
+          "dia_semana"
+        ],
+        "title": "CoberturaSemanal"
+      },
+      "ContrasenaTemporal": {
+        "properties": {
+          "usuario": {
+            "$ref": "#/components/schemas/UsuarioSalida"
+          },
+          "contrasena_temporal": {
+            "type": "string",
+            "title": "Contrasena Temporal"
+          }
+        },
+        "type": "object",
+        "required": [
+          "usuario",
+          "contrasena_temporal"
+        ],
+        "title": "ContrasenaTemporal"
+      },
+      "CopiaServidor": {
+        "properties": {
+          "nombre": {
+            "type": "string",
+            "title": "Nombre"
+          },
+          "tamano": {
+            "type": "integer",
+            "title": "Tamano"
+          },
+          "fecha": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Fecha"
+          }
+        },
+        "type": "object",
+        "required": [
+          "nombre",
+          "tamano",
+          "fecha"
+        ],
+        "title": "CopiaServidor"
+      },
+      "Dia": {
+        "properties": {
+          "fecha": {
+            "type": "string",
+            "format": "date",
+            "title": "Fecha"
+          },
+          "festivo": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Festivo",
+            "description": "Descripción si es festivo; None si es laborable"
+          }
+        },
+        "type": "object",
+        "required": [
+          "fecha",
+          "festivo"
+        ],
+        "title": "Dia"
+      },
+      "EfectosSolicitud": {
+        "properties": {
+          "avisos": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Avisos"
+          },
+          "meses": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Meses"
+          }
+        },
+        "type": "object",
+        "required": [
+          "avisos",
+          "meses"
+        ],
+        "title": "EfectosSolicitud"
+      },
+      "Elegibilidad": {
+        "type": "string",
+        "enum": [
+          "FIJO",
+          "HABITUAL",
+          "DISPONIBLE",
+          "NO_DISPONIBLE"
+        ],
+        "title": "Elegibilidad",
+        "description": "Valor de una celda de la cuadrícula de elegibilidad (5.1).\n\nHABITUAL: disponible y, si ese día trabaja, preferentemente en ese turno.\nNo obliga a trabajar ese día (a diferencia de FIJO)."
+      },
+      "Estado": {
+        "properties": {
+          "mes": {
+            "type": "string",
+            "format": "date",
+            "title": "Mes",
+            "description": "Primer día del mes revisado"
+          },
+          "anios_festivos_incompletos": {
+            "items": {
+              "type": "integer"
+            },
+            "type": "array",
+            "title": "Anios Festivos Incompletos"
+          },
+          "medicos_sin_carga": {
+            "items": {
+              "$ref": "#/components/schemas/Medico"
+            },
+            "type": "array",
+            "title": "Medicos Sin Carga"
+          },
+          "cobertura_definida": {
+            "type": "boolean",
+            "title": "Cobertura Definida"
+          }
+        },
+        "type": "object",
+        "required": [
+          "mes",
+          "anios_festivos_incompletos",
+          "medicos_sin_carga",
+          "cobertura_definida"
+        ],
+        "title": "Estado",
+        "description": "Situaciones que conviene resolver antes de generar un calendario.\n\n`medicos_sin_carga` se calcula para `mes` (el mes siguiente, que es el que\nnormalmente se planifica)."
+      },
+      "EstadoManual": {
+        "properties": {
+          "asignaciones": {
+            "items": {
+              "$ref": "#/components/schemas/AsignacionCalendario"
+            },
+            "type": "array",
+            "title": "Asignaciones"
+          },
+          "vetos": {
+            "items": {
+              "$ref": "#/components/schemas/VetoCalendario"
+            },
+            "type": "array",
+            "title": "Vetos"
+          },
+          "roles": {
+            "items": {
+              "$ref": "#/components/schemas/RolCalendario"
+            },
+            "type": "array",
+            "title": "Roles",
+            "default": []
+          }
+        },
+        "type": "object",
+        "required": [
+          "asignaciones",
+          "vetos"
+        ],
+        "title": "EstadoManual"
+      },
+      "Festivo": {
+        "properties": {
+          "fecha": {
+            "type": "string",
+            "format": "date",
+            "title": "Fecha"
+          },
+          "descripcion": {
+            "type": "string",
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Descripcion"
+          },
+          "ambito": {
+            "$ref": "#/components/schemas/AmbitoFestivo",
+            "default": "OTRO"
+          },
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "fecha",
+          "descripcion",
+          "id"
+        ],
+        "title": "Festivo"
+      },
+      "FestivoEntrada": {
+        "properties": {
+          "fecha": {
+            "type": "string",
+            "format": "date",
+            "title": "Fecha"
+          },
+          "descripcion": {
+            "type": "string",
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Descripcion"
+          },
+          "ambito": {
+            "$ref": "#/components/schemas/AmbitoFestivo",
+            "default": "OTRO"
+          }
+        },
+        "type": "object",
+        "required": [
+          "fecha",
+          "descripcion"
+        ],
+        "title": "FestivoEntrada"
+      },
+      "FestivoOficial": {
+        "properties": {
+          "fecha": {
+            "type": "string",
+            "format": "date",
+            "title": "Fecha"
+          },
+          "descripcion": {
+            "type": "string",
+            "title": "Descripcion"
+          },
+          "ambito": {
+            "$ref": "#/components/schemas/AmbitoFestivo"
+          },
+          "fuente": {
+            "type": "string",
+            "title": "Fuente",
+            "description": "Referencia oficial (BOE, boletín autonómico, datos abiertos…)"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Url"
+          },
+          "estado": {
+            "type": "string",
+            "title": "Estado",
+            "description": "NUEVO (falta en tus datos), IGUAL o DISTINTO (misma fecha, otro nombre o ámbito)"
+          }
+        },
+        "type": "object",
+        "required": [
+          "fecha",
+          "descripcion",
+          "ambito",
+          "fuente",
+          "estado"
+        ],
+        "title": "FestivoOficial"
+      },
+      "Generar": {
+        "properties": {
+          "alternativa": {
+            "type": "boolean",
+            "title": "Alternativa",
+            "default": false
+          }
+        },
+        "type": "object",
+        "title": "Generar"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "HorarioTurno": {
+        "properties": {
+          "turno": {
+            "$ref": "#/components/schemas/Turno"
+          },
+          "inicio": {
+            "type": "string",
+            "format": "time",
+            "title": "Inicio"
+          },
+          "corte": {
+            "type": "string",
+            "format": "time",
+            "title": "Corte"
+          },
+          "fin": {
+            "type": "string",
+            "format": "time",
+            "title": "Fin"
+          }
+        },
+        "type": "object",
+        "required": [
+          "turno",
+          "inicio",
+          "corte",
+          "fin"
+        ],
+        "title": "HorarioTurno"
+      },
+      "HuecoMes": {
+        "properties": {
+          "fecha": {
+            "type": "string",
+            "format": "date",
+            "title": "Fecha"
+          },
+          "turno": {
+            "$ref": "#/components/schemas/Turno"
+          }
+        },
+        "type": "object",
+        "required": [
+          "fecha",
+          "turno"
+        ],
+        "title": "HuecoMes"
+      },
+      "HuecoSemanal": {
+        "properties": {
+          "dia_semana": {
+            "type": "integer",
+            "maximum": 4.0,
+            "minimum": 0.0,
+            "title": "Dia Semana",
+            "description": "0 = lunes … 4 = viernes"
+          },
+          "turno": {
+            "$ref": "#/components/schemas/Turno"
+          }
+        },
+        "type": "object",
+        "required": [
+          "dia_semana",
+          "turno"
+        ],
+        "title": "HuecoSemanal"
+      },
+      "InfoServidor": {
+        "properties": {
+          "nombre": {
+            "type": "string",
+            "title": "Nombre"
+          },
+          "https": {
+            "type": "boolean",
+            "title": "Https"
+          },
+          "hay_certificado": {
+            "type": "boolean",
+            "title": "Hay Certificado"
+          },
+          "direcciones": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Direcciones"
+          },
+          "huella_autoridad": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Huella Autoridad"
+          },
+          "certificado_caduca": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Certificado Caduca"
+          },
+          "datos": {
+            "type": "string",
+            "title": "Datos"
+          },
+          "copias": {
+            "items": {
+              "$ref": "#/components/schemas/CopiaServidor"
+            },
+            "type": "array",
+            "title": "Copias"
+          },
+          "conservar_copias": {
+            "type": "integer",
+            "title": "Conservar Copias"
+          }
+        },
+        "type": "object",
+        "required": [
+          "nombre",
+          "https",
+          "hay_certificado",
+          "direcciones",
+          "huella_autoridad",
+          "certificado_caduca",
+          "datos",
+          "copias",
+          "conservar_copias"
+        ],
+        "title": "InfoServidor"
+      },
+      "InicioSesion": {
+        "properties": {
+          "usuario": {
+            "type": "string",
+            "maxLength": 80,
+            "title": "Usuario"
+          },
+          "contrasena": {
+            "type": "string",
+            "maxLength": 200,
+            "title": "Contrasena"
+          },
+          "dispositivo": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 200
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Dispositivo"
+          },
+          "aplicacion": {
+            "type": "boolean",
+            "title": "Aplicacion",
+            "default": false
+          }
+        },
+        "type": "object",
+        "required": [
+          "usuario",
+          "contrasena"
+        ],
+        "title": "InicioSesion"
+      },
+      "JornadaDia": {
+        "properties": {
+          "dia_semana": {
+            "type": "integer",
+            "maximum": 4.0,
+            "minimum": 0.0,
+            "title": "Dia Semana",
+            "description": "0 = lunes … 4 = viernes"
+          },
+          "tipo": {
+            "$ref": "#/components/schemas/TipoJornada"
+          }
+        },
+        "type": "object",
+        "required": [
+          "dia_semana",
+          "tipo"
+        ],
+        "title": "JornadaDia"
+      },
+      "Liberar": {
+        "properties": {
+          "fecha": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fecha"
+          },
+          "turno": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Turno"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "title": "Liberar",
+        "description": "Sin fecha: todo el mes. Con fecha y sin turno: todo el día."
+      },
+      "Medico": {
+        "properties": {
+          "nombre": {
+            "type": "string",
+            "maxLength": 80,
+            "minLength": 1,
+            "title": "Nombre"
+          },
+          "codigo": {
+            "type": "string",
+            "maxLength": 6,
+            "minLength": 1,
+            "title": "Codigo",
+            "description": "Iniciales para el calendario"
+          },
+          "activo": {
+            "type": "boolean",
+            "title": "Activo",
+            "default": true
+          },
+          "color": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^#[0-9a-fA-F]{6}$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Color",
+            "description": "Color en el calendario, #rrggbb"
+          },
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "nombre",
+          "codigo",
+          "id"
+        ],
+        "title": "Medico"
+      },
+      "MedicoCalendario": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "nombre": {
+            "type": "string",
+            "title": "Nombre"
+          },
+          "codigo": {
+            "type": "string",
+            "title": "Codigo"
+          },
+          "activo": {
+            "type": "boolean",
+            "title": "Activo"
+          },
+          "color": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Color"
+          },
+          "con_carga": {
+            "type": "boolean",
+            "title": "Con Carga",
+            "description": "False si no tiene carga definida para el mes"
+          },
+          "minimo": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Minimo"
+          },
+          "maximo": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Maximo"
+          },
+          "minimo_calculado": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Minimo Calculado"
+          },
+          "maximo_calculado": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Maximo Calculado"
+          },
+          "carga_manual": {
+            "type": "boolean",
+            "title": "Carga Manual",
+            "default": false
+          },
+          "asignado": {
+            "type": "integer",
+            "title": "Asignado",
+            "description": "Medios turnos asignados en el mes"
+          },
+          "asignado_manana": {
+            "type": "integer",
+            "title": "Asignado Manana"
+          },
+          "asignado_tarde": {
+            "type": "integer",
+            "title": "Asignado Tarde"
+          },
+          "urgencias": {
+            "type": "integer",
+            "title": "Urgencias",
+            "description": "Tardes de urgencias en el mes",
+            "default": 0
+          },
+          "domicilios": {
+            "type": "integer",
+            "title": "Domicilios",
+            "description": "Tardes de domicilios en el mes",
+            "default": 0
+          },
+          "tardes_disponibles": {
+            "type": "integer",
+            "title": "Tardes Disponibles",
+            "description": "Tardes que puede trabajar en el mes",
+            "default": 0
+          },
+          "no_elegibles": {
+            "items": {
+              "$ref": "#/components/schemas/NoElegible"
+            },
+            "type": "array",
+            "title": "No Elegibles"
+          },
+          "habituales": {
+            "items": {
+              "$ref": "#/components/schemas/HuecoMes"
+            },
+            "type": "array",
+            "title": "Habituales",
+            "description": "Turnos habituales del mes",
+            "default": []
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "nombre",
+          "codigo",
+          "activo",
+          "con_carga",
+          "asignado",
+          "asignado_manana",
+          "asignado_tarde",
+          "no_elegibles"
+        ],
+        "title": "MedicoCalendario"
+      },
+      "MedicoEntrada": {
+        "properties": {
+          "nombre": {
+            "type": "string",
+            "maxLength": 80,
+            "minLength": 1,
+            "title": "Nombre"
+          },
+          "codigo": {
+            "type": "string",
+            "maxLength": 6,
+            "minLength": 1,
+            "title": "Codigo",
+            "description": "Iniciales para el calendario"
+          },
+          "activo": {
+            "type": "boolean",
+            "title": "Activo",
+            "default": true
+          },
+          "color": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^#[0-9a-fA-F]{6}$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Color",
+            "description": "Color en el calendario, #rrggbb"
+          }
+        },
+        "type": "object",
+        "required": [
+          "nombre",
+          "codigo"
+        ],
+        "title": "MedicoEntrada"
+      },
+      "MesPublicado": {
+        "properties": {
+          "anio": {
+            "type": "integer",
+            "title": "Anio"
+          },
+          "mes": {
+            "type": "integer",
+            "title": "Mes"
+          },
+          "publicado_en": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Publicado En"
+          }
+        },
+        "type": "object",
+        "required": [
+          "anio",
+          "mes",
+          "publicado_en"
+        ],
+        "title": "MesPublicado"
+      },
+      "Mitad": {
+        "type": "string",
+        "enum": [
+          "M1",
+          "M2",
+          "T1",
+          "T2"
+        ],
+        "title": "Mitad",
+        "description": "Cada turno se divide en dos mitades (especificaciones, 5.3)."
+      },
+      "Municipio": {
+        "properties": {
+          "ine": {
+            "type": "string",
+            "title": "Ine"
+          },
+          "nombre": {
+            "type": "string",
+            "title": "Nombre"
+          },
+          "provincia": {
+            "type": "string",
+            "title": "Provincia"
+          },
+          "ccaa": {
+            "type": "string",
+            "title": "Ccaa"
+          },
+          "ccaa_nombre": {
+            "type": "string",
+            "title": "Ccaa Nombre"
+          }
+        },
+        "type": "object",
+        "required": [
+          "ine",
+          "nombre",
+          "provincia",
+          "ccaa",
+          "ccaa_nombre"
+        ],
+        "title": "Municipio"
+      },
+      "NoElegible": {
+        "properties": {
+          "fecha": {
+            "type": "string",
+            "format": "date",
+            "title": "Fecha"
+          },
+          "turno": {
+            "$ref": "#/components/schemas/Turno"
+          },
+          "motivo": {
+            "type": "string",
+            "title": "Motivo",
+            "description": "AUSENTE o NO_DISPONIBLE"
+          }
+        },
+        "type": "object",
+        "required": [
+          "fecha",
+          "turno",
+          "motivo"
+        ],
+        "title": "NoElegible"
+      },
+      "OrigenAsignacion": {
+        "type": "string",
+        "enum": [
+          "GENERADOR",
+          "FIJO",
+          "MANUAL"
+        ],
+        "title": "OrigenAsignacion"
+      },
+      "Preferencia": {
+        "type": "string",
+        "enum": [
+          "PREFIERE",
+          "EVITA"
+        ],
+        "title": "Preferencia",
+        "description": "Preferencia de un médico por un hueco semanal (5.4)."
+      },
+      "PreferenciaHueco": {
+        "properties": {
+          "dia_semana": {
+            "type": "integer",
+            "maximum": 4.0,
+            "minimum": 0.0,
+            "title": "Dia Semana",
+            "description": "0 = lunes … 4 = viernes"
+          },
+          "turno": {
+            "$ref": "#/components/schemas/Turno"
+          },
+          "valor": {
+            "$ref": "#/components/schemas/Preferencia"
+          }
+        },
+        "type": "object",
+        "required": [
+          "dia_semana",
+          "turno",
+          "valor"
+        ],
+        "title": "PreferenciaHueco"
+      },
+      "PropuestaAusencia": {
+        "properties": {
+          "tipo": {
+            "type": "string",
+            "const": "AUSENCIA",
+            "title": "Tipo"
+          },
+          "accion": {
+            "type": "string",
+            "enum": [
+              "CREAR",
+              "MODIFICAR",
+              "ANULAR"
+            ],
+            "title": "Accion"
+          },
+          "ausencia_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ausencia Id"
+          },
+          "desde": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Desde"
+          },
+          "hasta": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Hasta"
+          },
+          "turno": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Turno"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "None = día completo"
+          }
+        },
+        "type": "object",
+        "required": [
+          "tipo",
+          "accion"
+        ],
+        "title": "PropuestaAusencia"
+      },
+      "PropuestaCalendario": {
+        "properties": {
+          "tipo": {
+            "type": "string",
+            "const": "CALENDARIO",
+            "title": "Tipo"
+          },
+          "cambio": {
+            "type": "string",
+            "enum": [
+              "NO_PUEDO",
+              "OTRA_MITAD",
+              "INTERCAMBIO"
+            ],
+            "title": "Cambio"
+          },
+          "fecha": {
+            "type": "string",
+            "format": "date",
+            "title": "Fecha"
+          },
+          "turno": {
+            "$ref": "#/components/schemas/Turno"
+          },
+          "companero_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Companero Id"
+          },
+          "fecha_companero": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fecha Companero"
+          },
+          "turno_companero": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Turno"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "tipo",
+          "cambio",
+          "fecha",
+          "turno"
+        ],
+        "title": "PropuestaCalendario"
+      },
+      "PropuestaDisponibilidad": {
+        "properties": {
+          "tipo": {
+            "type": "string",
+            "const": "DISPONIBILIDAD",
+            "title": "Tipo"
+          },
+          "desde": {
+            "type": "string",
+            "format": "date",
+            "title": "Desde",
+            "description": "Primer día del mes desde el que vale"
+          },
+          "elegibilidad": {
+            "items": {
+              "$ref": "#/components/schemas/CeldaElegibilidad"
+            },
+            "type": "array",
+            "maxItems": 10,
+            "minItems": 10,
+            "title": "Elegibilidad"
+          }
+        },
+        "type": "object",
+        "required": [
+          "tipo",
+          "desde",
+          "elegibilidad"
+        ],
+        "title": "PropuestaDisponibilidad"
+      },
+      "RangoCarga": {
+        "properties": {
+          "minimo": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Minimo"
+          },
+          "maximo": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Maximo"
+          }
+        },
+        "type": "object",
+        "required": [
+          "minimo",
+          "maximo"
+        ],
+        "title": "RangoCarga"
+      },
+      "RangoCargaTurno": {
+        "properties": {
+          "turno": {
+            "$ref": "#/components/schemas/Turno"
+          },
+          "minimo": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Minimo"
+          },
+          "maximo": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Maximo"
+          }
+        },
+        "type": "object",
+        "required": [
+          "turno",
+          "minimo"
+        ],
+        "title": "RangoCargaTurno",
+        "description": "Límite de carga de un tipo de turno; `maximo` None = sin límite."
+      },
+      "ReglasGuardar": {
+        "properties": {
+          "elegibilidad": {
+            "items": {
+              "$ref": "#/components/schemas/CeldaElegibilidad"
+            },
+            "type": "array",
+            "title": "Elegibilidad"
+          },
+          "jornadas": {
+            "items": {
+              "$ref": "#/components/schemas/JornadaDia"
+            },
+            "type": "array",
+            "title": "Jornadas",
+            "default": []
+          },
+          "carga": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/RangoCarga"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "carga_por_turno": {
+            "items": {
+              "$ref": "#/components/schemas/RangoCargaTurno"
+            },
+            "type": "array",
+            "title": "Carga Por Turno",
+            "default": []
+          },
+          "preferencias": {
+            "items": {
+              "$ref": "#/components/schemas/PreferenciaHueco"
+            },
+            "type": "array",
+            "title": "Preferencias",
+            "default": []
+          },
+          "vigente_desde": {
+            "type": "string",
+            "format": "date",
+            "title": "Vigente Desde"
+          }
+        },
+        "type": "object",
+        "required": [
+          "elegibilidad",
+          "vigente_desde"
+        ],
+        "title": "ReglasGuardar",
+        "description": "Sin `carga`, se guarda el resto y la carga queda como estaba (o sin definir)."
+      },
+      "ReglasLeidas": {
+        "properties": {
+          "elegibilidad": {
+            "items": {
+              "$ref": "#/components/schemas/CeldaElegibilidad"
+            },
+            "type": "array",
+            "title": "Elegibilidad"
+          },
+          "jornadas": {
+            "items": {
+              "$ref": "#/components/schemas/JornadaDia"
+            },
+            "type": "array",
+            "title": "Jornadas",
+            "default": []
+          },
+          "carga": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/RangoCarga"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "carga_por_turno": {
+            "items": {
+              "$ref": "#/components/schemas/RangoCargaTurno"
+            },
+            "type": "array",
+            "title": "Carga Por Turno",
+            "default": []
+          },
+          "preferencias": {
+            "items": {
+              "$ref": "#/components/schemas/PreferenciaHueco"
+            },
+            "type": "array",
+            "title": "Preferencias",
+            "default": []
+          },
+          "vigente_desde": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Vigente Desde",
+            "description": "Versión aplicada; None si nunca se guardaron"
+          }
+        },
+        "type": "object",
+        "required": [
+          "elegibilidad",
+          "carga",
+          "vigente_desde"
+        ],
+        "title": "ReglasLeidas"
+      },
+      "Resolucion": {
+        "properties": {
+          "comentario": {
+            "type": "string",
+            "maxLength": 1000,
+            "title": "Comentario",
+            "default": ""
+          },
+          "aplicar": {
+            "type": "boolean",
+            "title": "Aplicar",
+            "description": "False: resuelta de otra forma, sin aplicar el cambio",
+            "default": true
+          }
+        },
+        "type": "object",
+        "title": "Resolucion"
+      },
+      "RespuestaCompanero": {
+        "properties": {
+          "acepta": {
+            "type": "boolean",
+            "title": "Acepta"
+          },
+          "comentario": {
+            "type": "string",
+            "maxLength": 1000,
+            "title": "Comentario",
+            "default": ""
+          }
+        },
+        "type": "object",
+        "required": [
+          "acepta"
+        ],
+        "title": "RespuestaCompanero"
+      },
+      "ResultadoImportar": {
+        "properties": {
+          "medicos": {
+            "type": "integer",
+            "title": "Medicos"
+          },
+          "meses": {
+            "type": "integer",
+            "title": "Meses"
+          },
+          "copia_anterior": {
+            "type": "string",
+            "title": "Copia Anterior",
+            "description": "Fichero con la copia de los datos que había antes de importar"
+          }
+        },
+        "type": "object",
+        "required": [
+          "medicos",
+          "meses",
+          "copia_anterior"
+        ],
+        "title": "ResultadoImportar"
+      },
+      "Rol": {
+        "type": "string",
+        "enum": [
+          "URGENCIAS",
+          "DOMICILIOS"
+        ],
+        "title": "Rol",
+        "description": "Papel de un médico en la tarde de un día: urgencias en el centro o domicilios.\n\nCada tarde con servicio, un médico distinto para cada papel, y solo entre los\nque hacen la tarde completa."
+      },
+      "RolCalendario": {
+        "properties": {
+          "fecha": {
+            "type": "string",
+            "format": "date",
+            "title": "Fecha"
+          },
+          "rol": {
+            "$ref": "#/components/schemas/Rol"
+          },
+          "medico_id": {
+            "type": "integer",
+            "title": "Medico Id"
+          },
+          "manual": {
+            "type": "boolean",
+            "title": "Manual",
+            "default": false
+          }
+        },
+        "type": "object",
+        "required": [
+          "fecha",
+          "rol",
+          "medico_id"
+        ],
+        "title": "RolCalendario"
+      },
+      "Rotacion": {
+        "properties": {
+          "nombre": {
+            "type": "string",
+            "maxLength": 80,
+            "minLength": 1,
+            "title": "Nombre"
+          },
+          "desde": {
+            "type": "string",
+            "format": "date",
+            "title": "Desde"
+          },
+          "activa": {
+            "type": "boolean",
+            "title": "Activa",
+            "default": true
+          },
+          "medicos": {
+            "items": {
+              "type": "integer"
+            },
+            "type": "array",
+            "title": "Medicos",
+            "default": []
+          },
+          "huecos": {
+            "items": {
+              "$ref": "#/components/schemas/HuecoSemanal"
+            },
+            "type": "array",
+            "title": "Huecos",
+            "default": []
+          },
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "nombre",
+          "desde",
+          "id"
+        ],
+        "title": "Rotacion"
+      },
+      "RotacionEntrada": {
+        "properties": {
+          "nombre": {
+            "type": "string",
+            "maxLength": 80,
+            "minLength": 1,
+            "title": "Nombre"
+          },
+          "desde": {
+            "type": "string",
+            "format": "date",
+            "title": "Desde"
+          },
+          "activa": {
+            "type": "boolean",
+            "title": "Activa",
+            "default": true
+          },
+          "medicos": {
+            "items": {
+              "type": "integer"
+            },
+            "type": "array",
+            "title": "Medicos",
+            "default": []
+          },
+          "huecos": {
+            "items": {
+              "$ref": "#/components/schemas/HuecoSemanal"
+            },
+            "type": "array",
+            "title": "Huecos",
+            "default": []
+          }
+        },
+        "type": "object",
+        "required": [
+          "nombre",
+          "desde"
+        ],
+        "title": "RotacionEntrada",
+        "description": "Turno rotativo: `huecos` de la semana que hacen por semanas alternas los `medicos`\n(en orden: el primero, la semana de `desde`; el siguiente, la semana después…)."
+      },
+      "ServidorPublico": {
+        "properties": {
+          "nombre": {
+            "type": "string",
+            "title": "Nombre"
+          },
+          "https": {
+            "type": "boolean",
+            "title": "Https"
+          },
+          "hay_certificado": {
+            "type": "boolean",
+            "title": "Hay Certificado"
+          }
+        },
+        "type": "object",
+        "required": [
+          "nombre",
+          "https",
+          "hay_certificado"
+        ],
+        "title": "ServidorPublico",
+        "description": "Lo que necesita la página de inicio de sesión."
+      },
+      "SesionAbierta": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "usuario": {
+            "type": "string",
+            "title": "Usuario"
+          },
+          "nombre_visible": {
+            "type": "string",
+            "title": "Nombre Visible"
+          },
+          "dispositivo": {
+            "type": "string",
+            "title": "Dispositivo"
+          },
+          "creada": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Creada"
+          },
+          "ultimo_uso": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Ultimo Uso"
+          },
+          "caduca": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Caduca"
+          },
+          "actual": {
+            "type": "boolean",
+            "title": "Actual"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "usuario",
+          "nombre_visible",
+          "dispositivo",
+          "creada",
+          "ultimo_uso",
+          "caduca",
+          "actual"
+        ],
+        "title": "SesionAbierta"
+      },
+      "SesionIniciada": {
+        "properties": {
+          "modo": {
+            "type": "string",
+            "enum": [
+              "personal",
+              "servidor"
+            ],
+            "title": "Modo"
+          },
+          "id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Id"
+          },
+          "nombre": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Nombre"
+          },
+          "nombre_visible": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Nombre Visible"
+          },
+          "rol": {
+            "type": "string",
+            "enum": [
+              "ADMINISTRADOR",
+              "PLANIFICADOR",
+              "MEDICO"
+            ],
+            "title": "Rol"
+          },
+          "medico_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Medico Id"
+          },
+          "debe_cambiar": {
+            "type": "boolean",
+            "title": "Debe Cambiar",
+            "default": false
+          },
+          "token": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Token"
+          }
+        },
+        "type": "object",
+        "required": [
+          "modo",
+          "rol"
+        ],
+        "title": "SesionIniciada"
+      },
+      "SolicitudEntrada": {
+        "properties": {
+          "propuesta": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/PropuestaDisponibilidad"
+              },
+              {
+                "$ref": "#/components/schemas/PropuestaAusencia"
+              },
+              {
+                "$ref": "#/components/schemas/PropuestaCalendario"
+              }
+            ],
+            "title": "Propuesta",
+            "discriminator": {
+              "propertyName": "tipo",
+              "mapping": {
+                "AUSENCIA": "#/components/schemas/PropuestaAusencia",
+                "CALENDARIO": "#/components/schemas/PropuestaCalendario",
+                "DISPONIBILIDAD": "#/components/schemas/PropuestaDisponibilidad"
+              }
+            }
+          },
+          "comentario": {
+            "type": "string",
+            "maxLength": 1000,
+            "title": "Comentario",
+            "default": ""
+          }
+        },
+        "type": "object",
+        "required": [
+          "propuesta"
+        ],
+        "title": "SolicitudEntrada"
+      },
+      "SolicitudSalida": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "tipo": {
+            "type": "string",
+            "enum": [
+              "DISPONIBILIDAD",
+              "AUSENCIA",
+              "CALENDARIO"
+            ],
+            "title": "Tipo"
+          },
+          "estado": {
+            "type": "string",
+            "enum": [
+              "ESPERA_COMPANERO",
+              "PENDIENTE",
+              "APROBADA",
+              "RESUELTA",
+              "RECHAZADA",
+              "RETIRADA"
+            ],
+            "title": "Estado"
+          },
+          "medico_id": {
+            "type": "integer",
+            "title": "Medico Id"
+          },
+          "medico": {
+            "type": "string",
+            "title": "Medico"
+          },
+          "companero_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Companero Id"
+          },
+          "companero": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Companero"
+          },
+          "propuesta": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Propuesta"
+          },
+          "descripcion": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Descripcion",
+            "description": "Qué cambia, en frases"
+          },
+          "comentario": {
+            "type": "string",
+            "title": "Comentario"
+          },
+          "respuesta_companero": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Respuesta Companero"
+          },
+          "creada": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Creada"
+          },
+          "resuelta_por": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Resuelta Por"
+          },
+          "resuelta_en": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Resuelta En"
+          },
+          "comentario_resolucion": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Comentario Resolucion"
+          },
+          "mia": {
+            "type": "boolean",
+            "title": "Mia",
+            "description": "La ha pedido quien consulta"
+          },
+          "me_toca_aceptar": {
+            "type": "boolean",
+            "title": "Me Toca Aceptar",
+            "description": "Es el compañero de un intercambio en espera"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "tipo",
+          "estado",
+          "medico_id",
+          "medico",
+          "companero_id",
+          "companero",
+          "propuesta",
+          "descripcion",
+          "comentario",
+          "respuesta_companero",
+          "creada",
+          "resuelta_por",
+          "resuelta_en",
+          "comentario_resolucion",
+          "mia",
+          "me_toca_aceptar"
+        ],
+        "title": "SolicitudSalida"
+      },
+      "TipoAviso": {
+        "type": "string",
+        "enum": [
+          "CAUSA",
+          "INCUMPLIMIENTO"
+        ],
+        "title": "TipoAviso"
+      },
+      "TipoJornada": {
+        "type": "string",
+        "enum": [
+          "MANANA_MAS_MEDIA",
+          "TARDE_MAS_MEDIA",
+          "DOBLE"
+        ],
+        "title": "TipoJornada",
+        "description": "Jornadas de más de un turno; solo las define el planificador (5.3)."
+      },
+      "Turno": {
+        "type": "string",
+        "enum": [
+          "MANANA",
+          "TARDE"
+        ],
+        "title": "Turno"
+      },
+      "UsuarioEntrada": {
+        "properties": {
+          "nombre_visible": {
+            "type": "string",
+            "maxLength": 80,
+            "minLength": 1,
+            "title": "Nombre Visible"
+          },
+          "rol": {
+            "type": "string",
+            "enum": [
+              "ADMINISTRADOR",
+              "PLANIFICADOR",
+              "MEDICO"
+            ],
+            "title": "Rol"
+          },
+          "medico_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Medico Id"
+          },
+          "activo": {
+            "type": "boolean",
+            "title": "Activo",
+            "default": true
+          }
+        },
+        "type": "object",
+        "required": [
+          "nombre_visible",
+          "rol"
+        ],
+        "title": "UsuarioEntrada"
+      },
+      "UsuarioNuevo": {
+        "properties": {
+          "nombre_visible": {
+            "type": "string",
+            "maxLength": 80,
+            "minLength": 1,
+            "title": "Nombre Visible"
+          },
+          "rol": {
+            "type": "string",
+            "enum": [
+              "ADMINISTRADOR",
+              "PLANIFICADOR",
+              "MEDICO"
+            ],
+            "title": "Rol"
+          },
+          "medico_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Medico Id"
+          },
+          "activo": {
+            "type": "boolean",
+            "title": "Activo",
+            "default": true
+          },
+          "nombre": {
+            "type": "string",
+            "maxLength": 40,
+            "minLength": 1,
+            "title": "Nombre"
+          }
+        },
+        "type": "object",
+        "required": [
+          "nombre_visible",
+          "rol",
+          "nombre"
+        ],
+        "title": "UsuarioNuevo"
+      },
+      "UsuarioSalida": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "nombre": {
+            "type": "string",
+            "title": "Nombre"
+          },
+          "nombre_visible": {
+            "type": "string",
+            "title": "Nombre Visible"
+          },
+          "rol": {
+            "type": "string",
+            "enum": [
+              "ADMINISTRADOR",
+              "PLANIFICADOR",
+              "MEDICO"
+            ],
+            "title": "Rol"
+          },
+          "medico_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Medico Id"
+          },
+          "activo": {
+            "type": "boolean",
+            "title": "Activo"
+          },
+          "debe_cambiar": {
+            "type": "boolean",
+            "title": "Debe Cambiar"
+          },
+          "creado": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Creado"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "nombre",
+          "nombre_visible",
+          "rol",
+          "medico_id",
+          "activo",
+          "debe_cambiar",
+          "creado"
+        ],
+        "title": "UsuarioSalida"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "ctx": {
+            "type": "object",
+            "title": "Context"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      },
+      "VetoCalendario": {
+        "properties": {
+          "medico_id": {
+            "type": "integer",
+            "title": "Medico Id"
+          },
+          "fecha": {
+            "type": "string",
+            "format": "date",
+            "title": "Fecha"
+          },
+          "turno": {
+            "$ref": "#/components/schemas/Turno"
+          }
+        },
+        "type": "object",
+        "required": [
+          "medico_id",
+          "fecha",
+          "turno"
+        ],
+        "title": "VetoCalendario"
+      },
+      "Yo": {
+        "properties": {
+          "modo": {
+            "type": "string",
+            "enum": [
+              "personal",
+              "servidor"
+            ],
+            "title": "Modo"
+          },
+          "id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Id"
+          },
+          "nombre": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Nombre"
+          },
+          "nombre_visible": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Nombre Visible"
+          },
+          "rol": {
+            "type": "string",
+            "enum": [
+              "ADMINISTRADOR",
+              "PLANIFICADOR",
+              "MEDICO"
+            ],
+            "title": "Rol"
+          },
+          "medico_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Medico Id"
+          },
+          "debe_cambiar": {
+            "type": "boolean",
+            "title": "Debe Cambiar",
+            "default": false
+          }
+        },
+        "type": "object",
+        "required": [
+          "modo",
+          "rol"
+        ],
+        "title": "Yo",
+        "description": "Quién usa la aplicación. En el modo personal, siempre un administrador sin cuenta."
+      }
+    }
+  }
+}

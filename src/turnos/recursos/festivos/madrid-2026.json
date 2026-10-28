@@ -1,0 +1,25 @@
+{
+  "calendario": "madrid",
+  "anio": 2026,
+  "completo": true,
+  "fuentes": [
+    "Decreto 75/2025, de 24 de septiembre, fiestas laborales 2026 en la Comunidad de Madrid (BOCM 25/09/2025)",
+    "Resolución de 2 de diciembre de 2025, fiestas laborales de ámbito local 2026 (BOCM-20251212-34)"
+  ],
+  "festivos": [
+    {"fecha": "2026-01-01", "descripcion": "Año Nuevo", "ambito": "NACIONAL"},
+    {"fecha": "2026-01-06", "descripcion": "Epifanía del Señor", "ambito": "NACIONAL"},
+    {"fecha": "2026-04-02", "descripcion": "Jueves Santo", "ambito": "AUTONOMICO"},
+    {"fecha": "2026-04-03", "descripcion": "Viernes Santo", "ambito": "NACIONAL"},
+    {"fecha": "2026-05-01", "descripcion": "Fiesta del Trabajo", "ambito": "NACIONAL"},
+    {"fecha": "2026-05-02", "descripcion": "Fiesta de la Comunidad de Madrid", "ambito": "AUTONOMICO"},
+    {"fecha": "2026-05-15", "descripcion": "San Isidro Labrador", "ambito": "LOCAL"},
+    {"fecha": "2026-08-15", "descripcion": "Asunción de la Virgen", "ambito": "NACIONAL"},
+    {"fecha": "2026-10-12", "descripcion": "Fiesta Nacional de España", "ambito": "NACIONAL"},
+    {"fecha": "2026-11-02", "descripcion": "Traslado de Todos los Santos", "ambito": "AUTONOMICO"},
+    {"fecha": "2026-11-09", "descripcion": "Nuestra Señora de la Almudena", "ambito": "LOCAL"},
+    {"fecha": "2026-12-07", "descripcion": "Traslado del Día de la Constitución", "ambito": "AUTONOMICO"},
+    {"fecha": "2026-12-08", "descripcion": "Inmaculada Concepción", "ambito": "NACIONAL"},
+    {"fecha": "2026-12-25", "descripcion": "Natividad del Señor", "ambito": "NACIONAL"}
+  ]
+}

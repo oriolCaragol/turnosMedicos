@@ -1,0 +1,48 @@
+# Turnos médicos como aplicación de escritorio GNOME (docs/diseno-escritorio.md, 11).
+# No se usa directamente: lo compila scripts/empaquetar-flatpak.sh, que antes prepara
+# build/flatpak/fuentes (la rueda de la aplicación, que lleva dentro la interfaz web).
+id: io.oriol.TurnosMedicos
+runtime: org.gnome.Platform
+runtime-version: "51"
+sdk: org.gnome.Sdk
+command: turnos-escritorio
+finish-args:
+  - --socket=wayland
+  - --socket=fallback-x11
+  - --share=ipc
+  - --device=dri
+  # Datos compartidos con el modo web: ~/.local/share/turnosMedicos
+  - --filesystem=xdg-data/turnosMedicos:create
+  # Red: solo para buscar los festivos oficiales en internet (Configuración). Servidor y
+  # ventana se hablan por el bucle local, y la ventana no usa proxy (ver ventana.py).
+  - --share=network
+cleanup:
+  - /include
+  - /lib/pkgconfig
+  - "*.a"
+modules:
+  - python3-dependencias.json
+
+  - name: turnos
+    buildsystem: simple
+    build-commands:
+      - pip3 install --no-index --no-deps --no-build-isolation --prefix=${FLATPAK_DEST} turnos-*.whl
+      - install -Dm644 io.oriol.TurnosMedicos.desktop -t ${FLATPAK_DEST}/share/applications/
+      # Prototipo de interfaz nativa (docs/prototipo-gnome-nativo.md), como segunda entrada del menú.
+      - install -Dm644 io.oriol.TurnosMedicos.Nativa.desktop -t ${FLATPAK_DEST}/share/applications/
+      - install -Dm644 io.oriol.TurnosMedicos.metainfo.xml -t ${FLATPAK_DEST}/share/metainfo/
+      - install -Dm644 io.oriol.TurnosMedicos.svg -t ${FLATPAK_DEST}/share/icons/hicolor/scalable/apps/
+      - install -Dm644 io.oriol.TurnosMedicos-symbolic.svg -t ${FLATPAK_DEST}/share/icons/hicolor/symbolic/apps/
+    sources:
+      - type: dir
+        path: ../../build/flatpak/fuentes
+      - type: file
+        path: io.oriol.TurnosMedicos.desktop
+      - type: file
+        path: io.oriol.TurnosMedicos.Nativa.desktop
+      - type: file
+        path: io.oriol.TurnosMedicos.metainfo.xml
+      - type: file
+        path: iconos/io.oriol.TurnosMedicos.svg
+      - type: file
+        path: iconos/io.oriol.TurnosMedicos-symbolic.svg

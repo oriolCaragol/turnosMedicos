@@ -1,0 +1,127 @@
+.tarjeta {
+  background: var(--superficie);
+  border: 1px solid var(--borde);
+  border-radius: 8px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+}
+
+.tarjeta p {
+  margin: 0;
+}
+
+.inactiva {
+  opacity: 0.65;
+}
+
+.fila {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.nombre {
+  font-weight: 600;
+  flex: 1;
+  min-width: 0;
+  font-size: 15px;
+}
+
+.miembros {
+  list-style: none;
+  margin: 6px 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.miembros li {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.botones {
+  display: flex;
+  margin-left: auto;
+}
+
+.orden {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--texto-suave);
+  min-width: 1.5em;
+}
+
+.botones button:disabled {
+  opacity: 0.3;
+}
+
+.ficha {
+  font-size: 12.5px;
+  padding: 1px 8px;
+  border-radius: 4px;
+  background: var(--hundido);
+  white-space: nowrap;
+}
+
+.rejilla {
+  display: grid;
+  grid-template-columns: auto repeat(5, 1fr);
+  gap: 3px;
+  align-items: center;
+  margin-top: 6px;
+}
+
+.dia {
+  font-size: 11px;
+  color: var(--texto-suave);
+  text-align: center;
+  font-weight: 600;
+}
+
+.turno {
+  font-size: 11.5px;
+  font-weight: 600;
+  padding-right: 4px;
+}
+
+.manana {
+  color: var(--manana);
+}
+
+.tarde {
+  color: var(--tarde);
+}
+
+.hueco {
+  border: 1px solid var(--borde);
+  border-radius: 4px;
+  height: 26px;
+  background: var(--superficie);
+  color: var(--acento-texto);
+  font-weight: 700;
+}
+
+.hueco[aria-pressed="true"] {
+  background: var(--fijo);
+  border-color: var(--fijo);
+}
+
+.semanas {
+  list-style: none;
+  margin: 6px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  font-size: 13px;
+}
+
+.aviso {
+  color: var(--aviso);
+}

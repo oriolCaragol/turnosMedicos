@@ -1,0 +1,117 @@
+/* Prototipo nativo: lo mínimo, sobre los estilos de libadwaita. */
+
+.mes-actual {
+  font-weight: bold;
+  font-feature-settings: "tnum";
+  padding: 0 8px;
+}
+
+.dia {
+  background: var(--card-bg-color);
+  border: 1px solid alpha(currentColor, 0.12);
+  border-radius: 10px;
+  padding: 6px;
+}
+
+.dia.festivo {
+  background: alpha(currentColor, 0.05);
+}
+
+.numero-dia {
+  font-weight: bold;
+  font-feature-settings: "tnum";
+}
+
+.turno {
+  padding: 4px 6px;
+  border-radius: 6px;
+}
+
+.titulo-turno {
+  font-size: 0.75em;
+  font-weight: bold;
+  letter-spacing: 0.05em;
+}
+
+.titulo-turno.manana { color: #9a6700; }
+.titulo-turno.tarde { color: #3a4fa0; }
+
+/* Mañana y tarde con fondos ligeramente distintos, para separarlas de un vistazo. */
+.turno.turno-manana { background: alpha(#b7801b, 0.06); }
+.turno.turno-tarde { background: alpha(#4359a8, 0.10); }
+.oscuro .turno.turno-manana { background: alpha(#e0b252, 0.06); }
+.oscuro .turno.turno-tarde { background: alpha(#8fa3f0, 0.12); }
+.turno.falta, .oscuro .turno.falta { background: alpha(@error_color, 0.14); }
+.turno.sobra, .oscuro .turno.sobra { background: alpha(@warning_color, 0.16); }
+
+.ficha {
+  border-radius: 999px;
+  padding: 1px 8px;
+  font-size: 0.85em;
+  background: alpha(@accent_bg_color, 0.14);
+}
+
+.papel {
+  border-radius: 4px;
+  padding: 1px 3px;
+}
+
+.papel.urgencias { background: #c01c28; color: white; }
+.papel.domicilios { background: #1c71d8; color: white; }
+
+.estado-mes {
+  border-radius: 999px;
+  padding: 2px 10px;
+  font-size: 0.8em;
+  font-weight: bold;
+  background: alpha(currentColor, 0.1);
+}
+
+.estado-mes.publicado { background: alpha(@success_color, 0.2); color: @success_color; }
+.estado-mes.borrador { background: alpha(@warning_color, 0.2); }
+
+.punto-color {
+  border-radius: 999px;
+  min-width: 12px;
+  min-height: 12px;
+}
+
+.fuera-de-rango { color: @error_color; font-weight: bold; }
+
+.ficha.doble { box-shadow: inset 0 -2px alpha(#b7801b, 0.7); }
+.turno.destino { background: alpha(@accent_bg_color, 0.2); outline: 2px dashed @accent_color; }
+row.error { background: alpha(@error_color, 0.08); }
+
+.hueco:not(:checked) image { opacity: 0; }
+.hueco:checked { background: @accent_bg_color; color: @accent_fg_color; }
+
+/* Tema oscuro: la ventana lleva la clase «oscuro» (ver ventana.py). */
+.oscuro .titulo-turno.manana { color: #e0b252; }
+.oscuro .titulo-turno.tarde { color: #8fa3f0; }
+.oscuro .ficha.doble { box-shadow: inset 0 -2px alpha(#e0b252, 0.8); }
+
+.tarjeta-medico { padding: 12px; }
+.tarjeta-medico.inactiva { opacity: 0.6; }
+.nombre-medico { font-weight: bold; }
+.celda-semana > button { padding-left: 6px; padding-right: 4px; min-width: 0; }
+.tarjeta-medico spinbutton > text { min-width: 0; }
+.tarjeta-medico spinbutton > button { padding: 0 4px; min-width: 22px; }
+
+/* Tabla de carga por médico. */
+.tabla-carga .celda { padding: 5px 10px; border-bottom: 1px solid alpha(currentColor, 0.08); min-height: 26px; }
+.tabla-carga .cabecera-tabla { font-size: 0.8em; font-weight: bold; opacity: 0.65; padding-top: 8px; padding-bottom: 8px; }
+.tabla-carga button.circular { min-width: 26px; min-height: 26px; padding: 0; }
+
+/* Cuadrícula semanal de un médico: colores por valor, como en la web. */
+.celda-semana > button { border-radius: 6px; }
+.eleg-fijo > button { background: #0d6b70; color: white; }
+.eleg-habitual > button { background: #e3f1f1; color: #0d6b70; box-shadow: inset 0 0 0 2px #0d6b70; font-weight: 800; }
+.eleg-disponible > button { background: #e3f1f1; color: #0d6b70; box-shadow: inset 0 0 0 1px alpha(#0d6b70, 0.6); }
+.eleg-no_disponible > button {
+  background-color: transparent;
+  background-image: repeating-linear-gradient(135deg, transparent 0 4px, alpha(currentColor, 0.12) 4px 8px);
+  color: alpha(currentColor, 0.6); font-weight: 400; box-shadow: inset 0 0 0 1px alpha(currentColor, 0.15);
+}
+.oscuro .eleg-fijo > button { background: #4fb0b5; color: #0c1a1d; }
+.oscuro .eleg-habitual > button { background: #1d3436; color: #4fb0b5; box-shadow: inset 0 0 0 2px #4fb0b5; }
+.oscuro .eleg-disponible > button { background: #1d3436; color: #4fb0b5; box-shadow: inset 0 0 0 1px alpha(#4fb0b5, 0.6); }

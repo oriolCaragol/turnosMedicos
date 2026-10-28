@@ -1,0 +1,12 @@
+[Desktop Entry]
+Type=Application
+Name=Turnos médicos
+GenericName=Planificador de turnos
+Comment=Asigna los turnos de mañana y tarde del equipo
+Icon=io.oriol.TurnosMedicos
+Exec=turnos-escritorio
+Terminal=false
+Categories=Office;Calendar;
+Keywords=turnos;médicos;guardias;calendario;horario;
+StartupNotify=true
+SingleMainWindow=true

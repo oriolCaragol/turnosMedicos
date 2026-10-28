@@ -1,0 +1,64 @@
+.tarjeta {
+  border: 1px solid var(--borde);
+  border-radius: 8px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  background: var(--superficie);
+}
+
+.cabecera {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.estado {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 10px;
+  background: var(--hundido);
+  color: var(--texto-suave);
+  white-space: nowrap;
+}
+
+.pendiente,
+.espera_companero {
+  background: var(--aviso-fondo);
+  color: var(--aviso);
+}
+
+.aprobada,
+.resuelta {
+  background: var(--ok-fondo);
+  color: var(--ok);
+}
+
+.rechazada {
+  background: var(--critico-fondo);
+  color: var(--critico);
+}
+
+.descripcion {
+  margin: 0;
+  padding-left: 18px;
+}
+
+.descripcion li:first-child:not(:only-child) {
+  list-style: none;
+  margin-left: -18px;
+}
+
+.comentario {
+  margin: 0;
+  font-style: italic;
+  color: var(--texto-suave);
+}
+
+.resolucion {
+  margin: 0;
+  font-weight: 500;
+}

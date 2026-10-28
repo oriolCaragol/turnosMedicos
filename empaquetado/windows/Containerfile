@@ -1,0 +1,40 @@
+# Entorno para construir TurnosMedicos.exe desde Linux: Wine con el Python oficial de
+# Windows (python.org) y PyInstaller. Lo usa scripts/construir-windows.sh; en GitHub,
+# el ejecutable se construye en un Windows de verdad (.github/workflows/windows.yml).
+FROM --platform=linux/amd64 docker.io/library/debian:trixie
+
+# Wine estable de WineHQ (el de Debian, 10.0, no tiene funciones de la biblioteca de C
+# de Windows que usa numpy, como `crealf`, y el motor no llegaría a cargar).
+RUN dpkg --add-architecture i386 \
+ && apt-get update -qq \
+ && DEBIAN_FRONTEND=noninteractive apt-get install -y -qq --no-install-recommends ca-certificates curl gnupg \
+ && mkdir -pm755 /etc/apt/keyrings \
+ && curl -sSfL -o /etc/apt/keyrings/winehq-archive.key https://dl.winehq.org/wine-builds/winehq.key \
+ && curl -sSfL -o /etc/apt/sources.list.d/winehq-trixie.sources \
+      https://dl.winehq.org/wine-builds/debian/dists/trixie/winehq-trixie.sources \
+ && apt-get update -qq \
+ && DEBIAN_FRONTEND=noninteractive apt-get install -y -qq --install-recommends winehq-stable \
+ && rm -rf /var/lib/apt/lists/*
+
+ENV WINEPREFIX=/wine WINEARCH=win64 WINEDEBUG=-all
+# Python oficial de Windows (python.org), instalado por partes con msiexec: el
+# instalador normal necesita una ventana aunque sea silencioso. Las sumas SHA-256 son
+# las de los paquetes publicados de esa versión.
+ARG PYTHON=3.13.17
+COPY python-msi.sha256 /tmp/msi/SHA256SUMS
+RUN cd /tmp/msi \
+ && for m in core exe lib dev tcltk; do \
+      curl -sSfL -o $m.msi https://www.python.org/ftp/python/${PYTHON}/amd64/$m.msi; done \
+ && sha256sum -c SHA256SUMS \
+ && wine wineboot --init && wineserver -w \
+ && for m in core exe lib dev tcltk; do \
+      wine msiexec /i "Z:\\tmp\\msi\\$m.msi" /qn TARGETDIR=C:\\Python ALLUSERS=1 || exit 1; done \
+ && wineserver -w \
+ && wine C:\\Python\\python.exe -m ensurepip --default-pip >/dev/null 2>&1; \
+    wine C:\\Python\\python.exe -m pip --version \
+ && wine C:\\Python\\python.exe -c "import tkinter, ssl, sqlite3" \
+ && rm -rf /tmp/msi
+
+ARG PYINSTALLER=6.22.3
+RUN wine C:\\Python\\python.exe -m pip install --no-warn-script-location -q --upgrade pip "pyinstaller==${PYINSTALLER}" \
+ && wineserver -w

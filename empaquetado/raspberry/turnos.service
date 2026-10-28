@@ -1,0 +1,39 @@
+# Servidor de Turnos médicos en la red de casa (docs/instalacion-raspberry.md).
+# Lo instala empaquetado/raspberry/instalar.sh en /etc/systemd/system/.
+[Unit]
+Description=Turnos médicos (servidor de la red de casa)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=turnos
+Group=turnos
+ExecStart=/opt/turnos/bin/turnos servidor --config /etc/turnos/servidor.toml
+Restart=on-failure
+RestartSec=5
+Environment=PYTHONUNBUFFERED=1
+# Los ficheros nuevos (datos, copias), solo para «turnos».
+UMask=0027
+# Datos en /var/lib/turnos (systemd lo crea con el dueño correcto).
+StateDirectory=turnos
+StateDirectoryMode=0750
+
+# Protección: solo puede escribir en sus datos.
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=yes
+PrivateTmp=yes
+PrivateDevices=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectControlGroups=yes
+ProtectClock=yes
+LockPersonality=yes
+RestrictSUIDSGID=yes
+RestrictNamespaces=yes
+# Red: IPv4/IPv6 y netlink (para conocer las direcciones del equipo y anunciarse por mDNS).
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX AF_NETLINK
+
+[Install]
+WantedBy=multi-user.target

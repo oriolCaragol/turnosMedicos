@@ -1,0 +1,17 @@
+{
+  "name": "Turnos médicos",
+  "short_name": "Turnos",
+  "description": "Turnos de mañana y tarde del equipo médico",
+  "lang": "es",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#f3f6f6",
+  "theme_color": "#0d6b70",
+  "icons": [
+    { "src": "/icono-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icono-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "/icono-adaptable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" },
+    { "src": "/icono.svg", "sizes": "any", "type": "image/svg+xml" }
+  ]
+}

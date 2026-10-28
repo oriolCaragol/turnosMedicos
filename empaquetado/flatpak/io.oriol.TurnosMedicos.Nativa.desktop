@@ -1,0 +1,12 @@
+[Desktop Entry]
+Type=Application
+Name=Turnos médicos (nativa)
+GenericName=Planificador de turnos
+Comment=Turnos médicos con interfaz GNOME nativa
+Icon=io.oriol.TurnosMedicos
+Exec=turnos-gnome
+Terminal=false
+Categories=Office;Calendar;
+Keywords=turnos;médicos;guardias;calendario;horario;
+StartupNotify=true
+SingleMainWindow=true

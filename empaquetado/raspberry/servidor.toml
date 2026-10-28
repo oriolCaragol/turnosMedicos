@@ -1,0 +1,16 @@
+# Configuración del servidor de Turnos médicos en la Raspberry Pi
+# (docs/instalacion-raspberry.md). Tras cambiarla: sudo systemctl restart turnos
+[red]
+direccion = "0.0.0.0"     # todas las interfaces de la red de casa
+puerto = 8443             # no choca con servicios habituales en la Pi (Pi-hole: 80 y 53; Node-RED: 1880)
+nombre = "turnos"         # se anuncia como turnos.local
+anunciar = true           # mDNS: las aplicaciones de escritorio lo encuentran solas
+
+[datos]
+ruta = "/var/lib/turnos/turnos.sqlite"
+copias = "/var/lib/turnos/copias"
+conservar_copias = 14     # días
+
+[seguridad]
+https = true
+duracion_sesion_dias = 30

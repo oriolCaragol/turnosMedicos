@@ -1,0 +1,81 @@
+.contenedor {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.rejilla {
+  display: grid;
+  grid-template-columns: auto repeat(5, 1fr);
+  gap: 3px;
+  align-items: center;
+  user-select: none;
+  touch-action: none;
+}
+
+.dia {
+  font-size: 11px;
+  color: var(--texto-suave);
+  text-align: center;
+  font-weight: 600;
+}
+
+.turno {
+  font-size: 11.5px;
+  font-weight: 600;
+  padding-right: 4px;
+}
+
+.manana {
+  color: var(--manana);
+}
+
+.tarde {
+  color: var(--tarde);
+}
+
+.celda {
+  border: 1px solid var(--borde);
+  border-radius: 4px;
+  padding: 5px 0;
+  font-size: 11.5px;
+  font-weight: 600;
+  background: var(--superficie);
+  color: var(--texto-suave);
+}
+
+.fijo {
+  background: var(--fijo);
+  border-color: var(--fijo);
+  color: var(--acento-texto);
+}
+
+/* Habitual: si trabaja ese día, prefiere este turno (no obliga como Fijo). */
+.habitual {
+  background: var(--disponible-fondo);
+  border: 2px solid var(--fijo);
+  color: var(--fijo);
+  font-weight: 700;
+}
+
+.disponible {
+  background: var(--disponible-fondo);
+  border-color: var(--acento);
+  color: var(--acento);
+}
+
+.no {
+  background: repeating-linear-gradient(135deg, transparent 0 4px, var(--hundido) 4px 8px);
+  color: var(--texto-suave);
+  font-weight: 400;
+}
+
+.atajos {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.celda[aria-disabled="true"] {
+  cursor: default;
+}

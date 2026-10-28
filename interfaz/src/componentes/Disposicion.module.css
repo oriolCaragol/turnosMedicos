@@ -1,0 +1,75 @@
+.cabecera {
+  position: sticky;
+  top: env(safe-area-inset-top, 0px);
+  z-index: 5;
+  background: var(--fondo);
+  border-bottom: 1px solid var(--borde);
+}
+
+/* Más específico que .envoltura, que deja margen inferior para el contenido. */
+.cabecera .interior {
+  padding-top: 14px;
+  padding-bottom: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.mes {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.mes output {
+  font-family: var(--mono);
+  font-size: 15px;
+  font-weight: 500;
+  min-width: 9.5em;
+  text-align: center;
+}
+
+.pestanas {
+  display: flex;
+  gap: 2px;
+  overflow-x: auto;
+}
+
+.pestanas a {
+  padding: 8px 14px;
+  border-bottom: 2px solid transparent;
+  font-weight: 500;
+  color: var(--texto-suave);
+  white-space: nowrap;
+  text-decoration: none;
+}
+
+.pestanas a:global(.active) {
+  color: var(--texto);
+  border-bottom-color: var(--acento);
+}
+
+.cuenta {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  margin-left: 4px;
+  padding: 1px 6px;
+  border-radius: 9px;
+  background: var(--critico-fondo);
+  color: var(--critico);
+}
+
+/* Modo servidor: quién ha entrado, cambiar la contraseña y salir. */
+.usuario {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+  font-size: 13px;
+  color: var(--texto-suave);
+}
+
+.cuentaAviso {
+  background: var(--aviso-fondo);
+  color: var(--aviso);
+}
